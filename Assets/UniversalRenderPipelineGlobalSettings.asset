@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   k_AssetVersion: 3
   m_RenderingLayerNames:
-  - Default
-  m_ValidRenderingLayers: 1
+  - Dice
+  - Tower
+  - Background
+  m_ValidRenderingLayers: 7
   lightLayerName0: 
   lightLayerName1: 
   lightLayerName2: 
