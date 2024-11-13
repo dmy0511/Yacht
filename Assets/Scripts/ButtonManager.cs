@@ -1,13 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ButtonManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject miningPanel;
-    private bool isMiningPanelActive = false;
+    public GameObject menuBar;
+    public GameObject challenge;
+    public GameObject announcement;
+    public GameObject mailBox;
+    public GameObject setting;
+    public GameObject pedigree;
+    public GameObject miningStatus;
+
+    private bool isMenuBarActive = false;
+    private bool isChallengeActive = false;
+    private bool isAnnouncementActive = false;
+    private bool isMailBoxActive = false;
+    private bool isSettingActive = false;
+    private bool isPedigreeActive = false;
+    private bool isMiningStatusActive = false;
 
     private enum SceneType
     {
@@ -23,21 +36,39 @@ public class ButtonManager : MonoBehaviour
     {
         currentScene = GetCurrentSceneType();
 
-        if (miningPanel != null)
+        if (menuBar != null)                // 메뉴
         {
-            miningPanel.SetActive(false);
+            menuBar.SetActive(false);
         }
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (challenge != null)              // 도전과제
         {
-            if (miningPanel != null && isMiningPanelActive)
-            {
-                isMiningPanelActive = false;
-                miningPanel.SetActive(false);
-            }
+            challenge.SetActive(false);
+        }
+
+        if (announcement != null)           // 공지사항
+        {
+            announcement.SetActive(false);
+        }
+
+        if (mailBox != null)                // 우편함
+        {
+            mailBox.SetActive(false);
+        }
+
+        if (setting != null)                // 설정
+        {
+            setting.SetActive(false);
+        }
+
+        if (pedigree != null)               // 족보
+        {
+            pedigree.SetActive(false);
+        }
+
+        if (miningStatus != null)           // 채굴현황
+        {
+            miningStatus.SetActive(false);
         }
     }
 
@@ -75,13 +106,118 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
+    public void MenuBar()
+    {
+        if (menuBar != null)
+        {
+            if (isMenuBarActive)
+            {
+                menuBar.SetActive(false);
+                isMenuBarActive = false;
+            }
+            else
+            {
+                menuBar.SetActive(true);
+                isMenuBarActive = true;
+            }
+        }
+    }
+
+    public void MenuBar_Close()
+    {
+        if (menuBar != null) menuBar.SetActive(false);
+        isMenuBarActive = false;
+    }
+
+
+    public void Challenge()
+    {
+        if (challenge != null)
+        {
+            isChallengeActive = !isChallengeActive;
+            challenge.SetActive(isChallengeActive);
+        }
+    }
+
+    public void Challenge_Close()
+    {
+        if (challenge != null) challenge.SetActive(false);
+        isChallengeActive = false;
+    }
+
+    public void Announcement()
+    {
+        if (announcement != null)
+        {
+            isAnnouncementActive = !isAnnouncementActive;
+            announcement.SetActive(isAnnouncementActive);
+        }
+    }
+
+    public void Announcement_Close()
+    {
+        if (announcement != null) announcement.SetActive(false);
+        isAnnouncementActive = false;
+    }
+
+    public void MailBox()
+    {
+        if (mailBox != null)
+        {
+            isMailBoxActive = !isMailBoxActive;
+            mailBox.SetActive(isMailBoxActive);
+        }
+    }
+
+    public void MailBox_Close()
+    {
+        if (mailBox != null) mailBox.SetActive(false);
+        isMailBoxActive = false;
+    }
+
+    public void Setting()
+    {
+        if (setting != null)
+        {
+            isSettingActive = !isSettingActive;
+            setting.SetActive(isSettingActive);
+        }
+    }
+
+    public void Setting_Close()
+    {
+        if (setting != null) setting.SetActive(false);
+        isSettingActive = false;
+    }
+
+    public void Pedigree()
+    {
+        if (pedigree != null)
+        {
+            isPedigreeActive = !isPedigreeActive;
+            pedigree.SetActive(isPedigreeActive);
+        }
+    }
+
+    public void Pedigree_Close()
+    {
+        if (pedigree != null) pedigree.SetActive(false);
+        isPedigreeActive = false;
+    }
+
     public void Mining_Status()
     {
-        if (miningPanel != null)
+        if (miningStatus != null)
         {
-            isMiningPanelActive = !isMiningPanelActive;
-            miningPanel.SetActive(isMiningPanelActive);
+            isMiningStatusActive = !isMiningStatusActive;
+            miningStatus.SetActive(isMiningStatusActive);
         }
+    }
+
+    public void Mining_Status_Close()
+    {
+        if (miningStatus != null) miningStatus.SetActive(false);
+        isMiningStatusActive = false;
     }
 
     private SceneType GetCurrentSceneType()
