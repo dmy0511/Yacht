@@ -22,6 +22,14 @@ public class ButtonManager : MonoBehaviour
     private bool isPedigreeActive = false;
     private bool isMiningStatusActive = false;
 
+    public GameObject question;
+
+    private bool isQuestionActive = false;
+
+    public GameObject stoneTower;
+
+    private bool isStoneTowerActive = false;
+
     private enum SceneType
     {
         Shop,
@@ -69,6 +77,16 @@ public class ButtonManager : MonoBehaviour
         if (miningStatus != null)           // Ã¤±¼ÇöÈ²
         {
             miningStatus.SetActive(false);
+        }
+
+        if (question != null)
+        {
+            question.SetActive(false);
+        }
+
+        if (stoneTower != null)
+        {
+            stoneTower.SetActive(false);
         }
     }
 
@@ -218,6 +236,36 @@ public class ButtonManager : MonoBehaviour
     {
         if (miningStatus != null) miningStatus.SetActive(false);
         isMiningStatusActive = false;
+    }
+
+    public void Question()
+    {
+        if (question != null)
+        {
+            isQuestionActive = !isQuestionActive;
+            question.SetActive(isQuestionActive);
+        }
+    }
+
+    public void Question_Close()
+    {
+        if (question != null) question.SetActive(false);
+        isQuestionActive = false;
+    }
+
+    public void Stone_Tower()
+    {
+        if (stoneTower != null)
+        {
+            isStoneTowerActive = !isStoneTowerActive;
+            stoneTower.SetActive(isStoneTowerActive);
+        }
+    }
+
+    public void Stone_Tower_Close()
+    {
+        if (stoneTower != null) stoneTower.SetActive(false);
+        isStoneTowerActive = false;
     }
 
     private SceneType GetCurrentSceneType()
