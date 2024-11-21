@@ -212,7 +212,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampMap:
-        m_Texture: {fileID: 2800000, guid: 5f19e5e916d11c44c8f08f155d34e7a5, type: 3}
+        m_Texture: {fileID: 2800000, guid: af21c4d22bf727e4689db2e6254bb1e7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Set_1st_ShadePosition:
@@ -616,7 +616,7 @@ Material:
     - _HighlightMaskColor: {r: 1, g: 1, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _LightDir: {r: 1.72, g: 0.6, b: -0.44, a: 0}
+    - _LightDir: {r: 1.14, g: 0.6, b: -0.44, a: 0}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineMaskColor: {r: 0, g: 0, b: 0, a: 1}
     - _Outline_Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
