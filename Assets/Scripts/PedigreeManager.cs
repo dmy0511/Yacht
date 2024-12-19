@@ -61,6 +61,7 @@ public class PedigreeManager : MonoBehaviour
     void SpawnItems()
     {
         totalConditionMetCount++;
+        textManager.IncrementCurrentScore();
 
         string rewardType;
         if (totalConditionMetCount % 4 == 0)
@@ -96,9 +97,9 @@ public class PedigreeManager : MonoBehaviour
 
                 float fillDuration = rewardType switch
                 {
-                    "Coin" => (rewardAmount / 5f) * 3f,
-                    "Clover" => rewardAmount / 1f,
-                    "Diamond" => rewardAmount * 10f,
+                    "Coin" => (rewardAmount / 500f) * 3f,
+                    "Clover" => rewardAmount / 100f,
+                    "Diamond" => rewardAmount * 1f,
                     _ => 5f
                 };
 

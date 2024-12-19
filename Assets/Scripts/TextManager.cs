@@ -12,28 +12,50 @@ public class TextManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rollText;
     [SerializeField] private Button rollButton;
 
+    [SerializeField] private TextMeshProUGUI bestText;
+    [SerializeField] private TextMeshProUGUI currentText;
+
     private int rollCount = 100;
     private int diceRollAttempts = 0;
 
     private int currentCoin;
     private int currentDiamond;
     private int currentClover;
+    private int bestScore;
+    private int currentScore;
 
     void Start()
     {
         // 첫 로드 시, 데이터 초기화
-        if (!PlayerPrefs.HasKey("FirstLoad"))
-        {
-            PlayerPrefs.SetInt("CurrentCoin", 0);
-            PlayerPrefs.SetInt("CurrentDiamond", 0);
-            PlayerPrefs.SetInt("CurrentClover", 0);
-            PlayerPrefs.SetInt("RollCount", 100);
+        //if (!PlayerPrefs.HasKey("FirstLoad"))
+        //{
+        //    PlayerPrefs.SetInt("CurrentCoin", 0);
+        //    PlayerPrefs.SetInt("CurrentDiamond", 0);
+        //    PlayerPrefs.SetInt("CurrentClover", 0);
+        //    PlayerPrefs.SetInt("RollCount", 100);
+        //    PlayerPrefs.SetInt("CurrentDiamond", 0);
+        //    PlayerPrefs.SetInt("CurrentClover", 0);
+        //    PlayerPrefs.SetInt("RollCount", 100);
 
-            PlayerPrefs.SetInt("FirstLoad", 1);
-            PlayerPrefs.Save();
-        }
+        //    PlayerPrefs.SetInt("FirstLoad", 1);
+        //    PlayerPrefs.Save();
+        //}
+
+        PlayerPrefs.SetInt("CurrentCoin", 0);
+        PlayerPrefs.SetInt("CurrentDiamond", 0);
+        PlayerPrefs.SetInt("CurrentClover", 0);
+        PlayerPrefs.SetInt("RollCount", 100);
+        PlayerPrefs.SetInt("RollCount", 100);
+
+        PlayerPrefs.GetInt("BestScore", 0);
+        PlayerPrefs.GetInt("CurrentScore", 0);
+
+        PlayerPrefs.SetInt("FirstLoad", 1);
+        PlayerPrefs.Save();
 
         rollCount = PlayerPrefs.GetInt("RollCount", 100);
+        bestScore = PlayerPrefs.GetInt("BestScore", 0);
+        currentScore = PlayerPrefs.GetInt("CurrentScore", 0);
 
         currentCoin = PlayerPrefs.GetInt("CurrentCoin", 0);
         currentDiamond = PlayerPrefs.GetInt("CurrentDiamond", 0);
@@ -43,6 +65,7 @@ public class TextManager : MonoBehaviour
         UpdateCloverText(0);
         UpdateDiamondText(0);
         UpdateRollText();
+        UpdateScoreTexts();
 
         rollButton.onClick.AddListener(OnRollDice);
     }
@@ -57,16 +80,6 @@ public class TextManager : MonoBehaviour
         coinText.text = ChangeNumber(currentCoin.ToString());
     }
 
-    public void UpdateCloverText(int coins)
-    {
-        currentClover += coins;
-
-        PlayerPrefs.SetInt("CurrentClover", currentClover);
-        PlayerPrefs.Save();
-
-        cloverText.text = ChangeNumber(currentClover.ToString());
-    }
-
     public void UpdateDiamondText(int reward)
     {
         currentDiamond += reward;
@@ -75,6 +88,16 @@ public class TextManager : MonoBehaviour
         PlayerPrefs.Save();
 
         diamondText.text = ChangeNumber(currentDiamond.ToString());
+    }
+
+    public void UpdateCloverText(int coins)
+    {
+        currentClover += coins;
+
+        PlayerPrefs.SetInt("CurrentClover", currentClover);
+        PlayerPrefs.Save();
+
+        cloverText.text = ChangeNumber(currentClover.ToString());
     }
 
     public void UpdateRollText()
@@ -86,6 +109,30 @@ public class TextManager : MonoBehaviour
         else
         {
             rollText.text = rollCount.ToString();
+        }
+    }
+
+    public void UpdateScoreTexts()
+    {
+        bestText.text = "BEST " + bestScore.ToString() + "F";
+        currentText.text = "NOW " + currentScore.ToString() + "F";
+    }
+
+    public void IncrementCurrentScore()
+    {
+        currentScore++;
+        PlayerPrefs.SetInt("CurrentScore", currentScore);
+        PlayerPrefs.Save();
+        UpdateScoreTexts();
+    }
+
+    private void UpdateBestScore()
+    {
+        if (currentScore >= bestScore)
+        {
+            bestScore = currentScore;
+            PlayerPrefs.SetInt("BestScore", bestScore);
+            PlayerPrefs.Save();
         }
     }
 
@@ -146,6 +193,11 @@ public class TextManager : MonoBehaviour
         else if (rollCount <= 0)
         {
             rollText.text = "게임 오버";
+            UpdateBestScore();
+            currentScore = 0;
+            PlayerPrefs.SetInt("CurrentScore", currentScore);
+            PlayerPrefs.Save();
+            UpdateScoreTexts();
         }
     }
 }
