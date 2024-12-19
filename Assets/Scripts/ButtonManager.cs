@@ -134,24 +134,44 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    public void OnChallengeButtonClick()
+    public void ChallengeBtnOpen()
     {
         ToggleUIElement(UIElementType.Challenge);
     }
 
-    public void OnChallengeButtonClose()
+    public void ChallengeBtnClose()
     {
         CloseUIElement(UIElementType.Challenge);
     }
 
-    public void OnPedigreeButtonClick()
+    public void PedigreeBtnOpen()
     {
         ToggleUIElement(UIElementType.Pedigree);
     }
 
-    public void OnPedigreeButtonClose()
+    public void PedigreeBtnClose()
     {
         CloseUIElement(UIElementType.Pedigree);
+    }
+
+    public void MiningBtnOpen()
+    {
+        ToggleUIElement(UIElementType.MiningStatus);
+    }
+
+    public void MiningBtnClose()
+    {
+        CloseUIElement(UIElementType.MiningStatus);
+    }
+
+    public void QuestionBtnOpen()
+    {
+        ToggleUIElement(UIElementType.Question);
+    }
+
+    public void QuestionBtnClose()
+    {
+        CloseUIElement(UIElementType.Question);
     }
 
     public void Stone_Tower()
