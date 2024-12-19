@@ -1198,6 +1198,8 @@ MonoBehaviour:
   cloverText: {fileID: 1460420152}
   rollText: {fileID: 0}
   rollButton: {fileID: 0}
+  bestText: {fileID: 0}
+  currentText: {fileID: 0}
 --- !u!4 &145695380
 Transform:
   m_ObjectHideFlags: 0

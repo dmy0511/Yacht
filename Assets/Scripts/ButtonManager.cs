@@ -16,7 +16,8 @@ public class ButtonManager : MonoBehaviour
         Setting,
         Pedigree,
         MiningStatus,
-        Question
+        Question,
+        Stair
     }
 
     [System.Serializable]
@@ -40,6 +41,7 @@ public class ButtonManager : MonoBehaviour
         new UIElementGroup { type = UIElementType.Pedigree },
         new UIElementGroup { type = UIElementType.MiningStatus },
         new UIElementGroup { type = UIElementType.Question },
+        new UIElementGroup { type = UIElementType.Stair }
     };
 
     public GameObject stoneTower;
@@ -172,6 +174,16 @@ public class ButtonManager : MonoBehaviour
     public void QuestionBtnClose()
     {
         CloseUIElement(UIElementType.Question);
+    }
+
+    public void StairWindowOpen()
+    {
+        ToggleUIElement(UIElementType.Stair);
+    }
+
+    public void StairWindowClose()
+    {
+        CloseUIElement(UIElementType.Stair);
     }
 
     public void Stone_Tower()
