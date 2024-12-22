@@ -13,6 +13,19 @@ public class CashData : MonoBehaviour
     [Header("가져올 데이터 저장소")]
     [SerializeField] private TextManager textManager;
 
+    public event System.Action OnResourceChanged;
+
+    private int currentCoin => PlayerPrefs.GetInt("CurrentCoin", 0);
+    private int currentDiamond => PlayerPrefs.GetInt("CurrentDiamond", 0);
+    private int currentClover => PlayerPrefs.GetInt("CurrentClover", 0);
+
+    public bool HasEnoughResources(int coinCost, int cloverCost, int diamondCost)
+    {
+        return currentCoin >= coinCost &&
+               currentClover >= cloverCost &&
+               currentDiamond >= diamondCost;
+    }
+
     private void OnEnable()
     {
         if (textManager != null)
@@ -59,7 +72,6 @@ public class CashData : MonoBehaviour
             PlayerPrefs.SetInt("CurrentDiamond", currentDiamond - diamondCost);
             PlayerPrefs.SetInt("CurrentClover", currentClover - cloverCost);
             PlayerPrefs.Save();
-
             UpdateShopUI();
 
             if (textManager != null)
@@ -68,6 +80,8 @@ public class CashData : MonoBehaviour
                 textManager.UpdateDiamondText(-diamondCost);
                 textManager.UpdateCloverText(-cloverCost);
             }
+
+            OnResourceChanged?.Invoke();
 
             return true;
         }

@@ -155,8 +155,8 @@ public class PedigreeManager : MonoBehaviour
     {
         return rewardType switch
         {
-            "Coin" => (rewardAmount / 500f) * 3f,
-            "Clover" => rewardAmount / 100f,
+            "Coin" => (rewardAmount / 5f) * 3f,
+            "Clover" => rewardAmount / 1f,
             "Diamond" => rewardAmount * 10f,
             _ => 5f
         };

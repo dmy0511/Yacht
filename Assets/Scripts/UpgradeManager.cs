@@ -76,6 +76,11 @@ public class UpgradeManager : MonoBehaviour
         LoadSavedState();
         SetupButtons();
         UpdateUI();
+
+        if (cashData != null)
+        {
+            cashData.OnResourceChanged += UpdateMiningButtonStates;
+        }
     }
 
     public void CoinMiningUp()
@@ -237,13 +242,22 @@ public class UpgradeManager : MonoBehaviour
         int coinLevel = PlayerPrefs.GetInt("CoinMiningLevel", 1);
         int cloverLevel = PlayerPrefs.GetInt("CloverMiningLevel", 1);
         int diamondLevel = PlayerPrefs.GetInt("DiamondMiningLevel", 1);
-
-        coinMiningButton.interactable = coinLevel < MAX_MINING_LEVEL;
-        cloverMiningButton.interactable = cloverLevel < MAX_MINING_LEVEL;
-        diamondMiningButton.interactable = diamondLevel < MAX_MINING_LEVEL;
-
         int defenseLevel = PlayerPrefs.GetInt("RollDefenseLevel", 1);
-        rollCountDefenseButton.interactable = defenseLevel < MAX_DEFENSE_LEVEL;
+
+        bool hasMiningCost = cashData != null && cashData.HasEnoughResources(MINING_COST, 0, 0);
+        bool hasDefenseCost = cashData != null && cashData.HasEnoughResources(0, DEFENSE_COST, 0);
+
+        if (coinMiningButton != null)
+            coinMiningButton.interactable = coinLevel < MAX_MINING_LEVEL && hasMiningCost;
+
+        if (cloverMiningButton != null)
+            cloverMiningButton.interactable = cloverLevel < MAX_MINING_LEVEL && hasMiningCost;
+
+        if (diamondMiningButton != null)
+            diamondMiningButton.interactable = diamondLevel < MAX_MINING_LEVEL && hasMiningCost;
+
+        if (rollCountDefenseButton != null)
+            rollCountDefenseButton.interactable = defenseLevel < MAX_DEFENSE_LEVEL && hasDefenseCost;
     }
 
     public float GetMiningTimeReduction(string type)
@@ -268,6 +282,15 @@ public class UpgradeManager : MonoBehaviour
     {
         int level = PlayerPrefs.GetInt("RollDefenseLevel", 1) - 1;
         return level * DEFENSE_RATE_PER_LEVEL;
+    }
+
+    public float GetDiceNumberProbability(int diceNumber)
+    {
+        if (diceNumber < 1 || diceNumber > 6) return 0f;
+
+        int rowIndex = diceNumber - 1;
+
+        return probabilityRows[rowIndex].activeSlots * 0.1f;
     }
 
     private void LoadSavedState()
@@ -340,6 +363,13 @@ public class UpgradeManager : MonoBehaviour
         if (currentShowDicePoint <= 0 || row < 0 || row >= probabilityRows.Length) return;
         if (probabilityRows[row].activeSlots >= 6) return;
 
+        currentShowDicePoint--;
+        PlayerPrefs.SetInt("ShowDicePoint", currentShowDicePoint);
+        if (showDicePointText != null)
+        {
+            showDicePointText.text = $"보유 포인트 : {currentShowDicePoint}";
+        }
+
         probabilityRows[row].activeSlots++;
         SaveRowState(row);
         UpdateUI();
@@ -365,12 +395,6 @@ public class UpgradeManager : MonoBehaviour
     {
         currentShowDicePoint = PlayerPrefs.GetInt("ShowDicePoint", 0);
         UpdateUI();
-    }
-
-    private void LoadActiveProbabilityStatus()
-    {
-        activeRow = PlayerPrefs.GetInt(ACTIVE_ROW_KEY, 0);
-        activeSlot = PlayerPrefs.GetInt(ACTIVE_SLOT_KEY, 0);
     }
 
     private void UpdateProbabilitySlots()

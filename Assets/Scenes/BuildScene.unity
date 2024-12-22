@@ -23140,6 +23140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1773751900}
   - component: {fileID: 1773751899}
+  - component: {fileID: 1773751901}
   m_Layer: 11
   m_Name: Background
   m_TagString: Untagged
@@ -23188,7 +23189,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -852947045, guid: 1ae1ebb03ba699b459c9980b62ebeb28, type: 3}
+  m_Sprite: {fileID: -1262225091, guid: 876fc46cb4ca14845bb8d93ac26a0935, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23214,6 +23215,61 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1773751901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773751898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44be34f75591ee748a9bc3914058ad26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundSprites:
+  - {fileID: -1262225091, guid: 876fc46cb4ca14845bb8d93ac26a0935, type: 3}
+  - {fileID: 954278574, guid: c56518706aba4ef4f9790dc537aec29d, type: 3}
+  - {fileID: -1250072183, guid: e585a5f1ea8c31e4cb8234d56b2b23ce, type: 3}
+  - {fileID: -910367735, guid: c14cb459fb4c2544fbbf130c9564fa7f, type: 3}
+  - {fileID: 422727545, guid: 765f2ac04b21d794eadf8f1f45971c50, type: 3}
+  - {fileID: 419361064, guid: a8958e2f74931b444a4f0e7b4e0919f7, type: 3}
+  - {fileID: -523413112, guid: 873c16ff5e9e7344883a0bd8a76c9350, type: 3}
+  - {fileID: -1017159550, guid: c3d104fc20889c14b9144dfd71df0169, type: 3}
+  - {fileID: 1081220876, guid: 64d447e8a35b9a34aa23b7955d874b14, type: 3}
+  - {fileID: -881470171, guid: 8aaa510939ef1234fa0f04ee8788ce81, type: 3}
+  - {fileID: -1208552082, guid: c0e605a631ffe7a4eb6343dffe5bff53, type: 3}
+  - {fileID: -1074008154, guid: 6ffe59fa64b6ba94c9e5bf4c6bb3a284, type: 3}
+  - {fileID: 90988383, guid: 6b84bf329677f704eaf5dd786ee8bc55, type: 3}
+  - {fileID: 2146427493, guid: 06395c579be4aba43815d2b2d748c05c, type: 3}
+  - {fileID: -844788436, guid: c526b7900f597f74b8427195760f347c, type: 3}
+  - {fileID: 2019504314, guid: 202fadb020c84a944ae82e35e73e17e2, type: 3}
+  - {fileID: -1012639381, guid: 55c802392e10a8c43a760055e7df1f76, type: 3}
+  - {fileID: -1233410301, guid: 67259ce15283070438d727de1f1901a8, type: 3}
+  - {fileID: -1657249406, guid: a7f8115a4bfec2d4daa436ca992ee579, type: 3}
+  - {fileID: -1753812772, guid: 64b21aa681bdb754a913fa7d30b3610a, type: 3}
+  - {fileID: -308192312, guid: 5bcd23b618e75a241bd1ccb8aacff0ee, type: 3}
+  - {fileID: 893447220, guid: 00bdee37ebae0d64a9cf461a688ea37c, type: 3}
+  - {fileID: -726227083, guid: b9ced1c21a937ce47b3dca64f45a9272, type: 3}
+  - {fileID: -239439400, guid: b4c1ac3f9dfcffd4f9d8a2401ab05efa, type: 3}
+  - {fileID: -469081016, guid: 4635a836857a32a43ae6bcf192a6ced2, type: 3}
+  - {fileID: 871499889, guid: 07629a8765bf31e43b438287ce8728d2, type: 3}
+  - {fileID: -216156840, guid: 420f996988e822746a4819d31a0df973, type: 3}
+  - {fileID: -1841330011, guid: e41ef22dcb29b234aa873f5ebb5a1327, type: 3}
+  - {fileID: -1810998774, guid: 0487a31f5c95eb146b392f6d8e4578d7, type: 3}
+  - {fileID: 1279794863, guid: aae86cf19443ad546b513a71d88d0ad3, type: 3}
+  - {fileID: 500009887, guid: f48d4b95b90e29a48836f4a9aa1aeb24, type: 3}
+  - {fileID: 564411800, guid: 22cb456fd71f8a648990217190bcfc08, type: 3}
+  - {fileID: -1753561148, guid: 4a614c864d0a300458202f084311287f, type: 3}
+  - {fileID: 427553821, guid: 26c48677c74bc8141b0e54cd52cfab43, type: 3}
+  - {fileID: 265694655, guid: c8346175db658c246b9cd1e6931b4ee8, type: 3}
+  - {fileID: 788132606, guid: 095008856917aa24aab452f70247bc7f, type: 3}
+  - {fileID: 1282911021, guid: 552f704ea66bb354bb426301e2d33935, type: 3}
+  - {fileID: -347862815, guid: 6b1d913d56460a7438f0a2590c987990, type: 3}
+  - {fileID: -889068601, guid: ee62803d60c71cc4e870036708684dd1, type: 3}
+  - {fileID: 1331022555, guid: 606a47f65c60231428457a8da9a2746e, type: 3}
+  - {fileID: 374609427, guid: db129f1f77abf7a4a8676cb3039a55f2, type: 3}
+  backgroundImage: {fileID: 1773751899}
 --- !u!4 &1783080589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ea77e77d9083b9642b570264d2dc23bd, type: 3}
