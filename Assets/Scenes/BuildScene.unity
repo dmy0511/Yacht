@@ -11982,7 +11982,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.5568628, g: 0.7019608, b: 0.39607847, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -16594,8 +16594,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -110}
-  m_SizeDelta: {x: 1035, y: 1658}
+  m_AnchoredPosition: {x: 0, y: 304.5}
+  m_SizeDelta: {x: 1035, y: 829}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1318092400
 MonoBehaviour:
@@ -23269,7 +23269,7 @@ MonoBehaviour:
   - {fileID: -889068601, guid: ee62803d60c71cc4e870036708684dd1, type: 3}
   - {fileID: 1331022555, guid: 606a47f65c60231428457a8da9a2746e, type: 3}
   - {fileID: 374609427, guid: db129f1f77abf7a4a8676cb3039a55f2, type: 3}
-  backgroundImage: {fileID: 1773751899}
+  backgroundRenderer: {fileID: 1773751899}
 --- !u!4 &1783080589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ea77e77d9083b9642b570264d2dc23bd, type: 3}

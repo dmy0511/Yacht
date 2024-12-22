@@ -74,7 +74,7 @@ public class Score : MonoBehaviour
             lockedRollCount = 1;
         }
 
-        if (currentlyLocked && lockedRollCount >= 4)
+        if (currentlyLocked && lockedRollCount >= 3)
         {
             ResetAllDice();
             lockedRollCount = 0;
