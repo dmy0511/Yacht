@@ -24,50 +24,94 @@ public class TextManager : MonoBehaviour
     private int bestScore;
     private int currentScore;
 
+    public event System.Action<int> OnCoinUpdated;
+    public event System.Action<int> OnDiamondUpdated;
+    public event System.Action<int> OnCloverUpdated;
+
+    [SerializeField] private UpgradeManager upgradeManager;
+
+    [Header("Game Over Panel")]
+    [SerializeField] private TextMeshProUGUI gameOverBestText;
+    [SerializeField] private TextMeshProUGUI gameOverCurrentText;
+    [SerializeField] private GameObject gameOverPanel;
+
+    public event System.Action OnRollComplete;
+
     void Start()
     {
-        // 첫 로드 시, 데이터 초기화
-        //if (!PlayerPrefs.HasKey("FirstLoad"))
-        //{
-        //    PlayerPrefs.SetInt("CurrentCoin", 0);
-        //    PlayerPrefs.SetInt("CurrentDiamond", 0);
-        //    PlayerPrefs.SetInt("CurrentClover", 0);
-        //    PlayerPrefs.SetInt("RollCount", 100);
-        //    PlayerPrefs.SetInt("CurrentDiamond", 0);
-        //    PlayerPrefs.SetInt("CurrentClover", 0);
-        //    PlayerPrefs.SetInt("RollCount", 100);
-
-        //    PlayerPrefs.SetInt("FirstLoad", 1);
-        //    PlayerPrefs.Save();
-        //}
-
-        PlayerPrefs.SetInt("CurrentCoin", 0);
-        PlayerPrefs.SetInt("CurrentDiamond", 0);
-        PlayerPrefs.SetInt("CurrentClover", 0);
-        PlayerPrefs.SetInt("RollCount", 100);
-        PlayerPrefs.SetInt("RollCount", 100);
-
-        PlayerPrefs.GetInt("BestScore", 0);
-        PlayerPrefs.GetInt("CurrentScore", 0);
-
-        PlayerPrefs.SetInt("FirstLoad", 1);
-        PlayerPrefs.Save();
+        if (!PlayerPrefs.HasKey("FirstLoad"))
+        {
+            PlayerPrefs.SetInt("CurrentCoin", 0);
+            PlayerPrefs.SetInt("CurrentDiamond", 0);
+            PlayerPrefs.SetInt("CurrentClover", 0);
+            PlayerPrefs.SetInt("RollCount", 100);
+            PlayerPrefs.SetInt("BestScore", 0);
+            PlayerPrefs.SetInt("CurrentScore", 0);
+            PlayerPrefs.SetInt("FirstLoad", 1);
+            PlayerPrefs.Save();
+        }
 
         rollCount = PlayerPrefs.GetInt("RollCount", 100);
         bestScore = PlayerPrefs.GetInt("BestScore", 0);
         currentScore = PlayerPrefs.GetInt("CurrentScore", 0);
-
         currentCoin = PlayerPrefs.GetInt("CurrentCoin", 0);
         currentDiamond = PlayerPrefs.GetInt("CurrentDiamond", 0);
         currentClover = PlayerPrefs.GetInt("CurrentClover", 0);
 
-        UpdateCoinText(0);
-        UpdateCloverText(0);
-        UpdateDiamondText(0);
-        UpdateRollText();
-        UpdateScoreTexts();
+        if (coinText != null) UpdateCoinText(0);
+        if (cloverText != null) UpdateCloverText(0);
+        if (diamondText != null) UpdateDiamondText(0);
 
-        rollButton.onClick.AddListener(OnRollDice);
+        if (rollText != null) UpdateRollText();
+        if (bestText != null && currentText != null) UpdateScoreTexts();
+
+        if (rollButton != null)
+        {
+            rollButton.onClick.AddListener(OnRollDice);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+            UpdateGameOverTexts();
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ResetPlayerPrefs();
+        }
+    }
+
+    private void ResetPlayerPrefs()
+    {
+        PlayerPrefs.SetInt("CurrentCoin", 0);
+        PlayerPrefs.SetInt("CurrentDiamond", 0);
+        PlayerPrefs.SetInt("CurrentClover", 0);
+        PlayerPrefs.SetInt("RollCount", 100);
+        PlayerPrefs.SetInt("BestScore", 0);
+        PlayerPrefs.SetInt("CurrentScore", 0);
+        PlayerPrefs.SetInt("FirstLoad", 1);
+        PlayerPrefs.Save();
+
+        rollCount = 100;
+        bestScore = 0;
+        currentScore = 0;
+        currentCoin = 0;
+        currentDiamond = 0;
+        currentClover = 0;
+
+        if (coinText != null) UpdateCoinText(0);
+        if (cloverText != null) UpdateCloverText(0);
+        if (diamondText != null) UpdateDiamondText(0);
+        if (rollText != null) UpdateRollText();
+        if (bestText != null && currentText != null) UpdateScoreTexts();
+
+        ResetGame();
+
+        Debug.Log("PlayerPrefs가 초기화되었습니다!");
     }
 
     public void UpdateCoinText(int score)
@@ -78,6 +122,8 @@ public class TextManager : MonoBehaviour
         PlayerPrefs.Save();
 
         coinText.text = ChangeNumber(currentCoin.ToString());
+
+        OnCoinUpdated?.Invoke(currentCoin);
     }
 
     public void UpdateDiamondText(int reward)
@@ -88,6 +134,8 @@ public class TextManager : MonoBehaviour
         PlayerPrefs.Save();
 
         diamondText.text = ChangeNumber(currentDiamond.ToString());
+
+        OnDiamondUpdated?.Invoke(currentDiamond);
     }
 
     public void UpdateCloverText(int coins)
@@ -98,6 +146,8 @@ public class TextManager : MonoBehaviour
         PlayerPrefs.Save();
 
         cloverText.text = ChangeNumber(currentClover.ToString());
+
+        OnCloverUpdated?.Invoke(currentClover);
     }
 
     public void UpdateRollText()
@@ -116,6 +166,19 @@ public class TextManager : MonoBehaviour
     {
         bestText.text = "BEST " + bestScore.ToString() + "F";
         currentText.text = "NOW " + currentScore.ToString() + "F";
+        UpdateGameOverTexts();
+    }
+
+    private void UpdateGameOverTexts()
+    {
+        if (gameOverBestText != null)
+        {
+            gameOverBestText.text = "BEST " + bestScore.ToString() + "F";
+        }
+        if (gameOverCurrentText != null)
+        {
+            gameOverCurrentText.text = "NOW " + currentScore.ToString() + "F";
+        }
     }
 
     public void IncrementCurrentScore()
@@ -181,16 +244,28 @@ public class TextManager : MonoBehaviour
 
             if (diceRollAttempts >= 5)
             {
-                rollCount--;
+                float defenseRate = 0f;
+                if (upgradeManager != null)
+                {
+                    defenseRate = upgradeManager.GetRollDefenseRate();
+                }
 
-                PlayerPrefs.SetInt("RollCount", rollCount);
-                PlayerPrefs.Save();
+                bool isDefenseSuccessful = Random.Range(0f, 100f) < defenseRate;
+
+                if (!isDefenseSuccessful)
+                {
+                    rollCount--;
+                    PlayerPrefs.SetInt("RollCount", rollCount);
+                    PlayerPrefs.Save();
+                }
 
                 UpdateRollText();
+                OnRollComplete?.Invoke();
                 diceRollAttempts = 0;
             }
         }
-        else if (rollCount <= 0)
+
+        if (rollCount <= 0)
         {
             rollText.text = "게임 오버";
             UpdateBestScore();
@@ -198,6 +273,26 @@ public class TextManager : MonoBehaviour
             PlayerPrefs.SetInt("CurrentScore", currentScore);
             PlayerPrefs.Save();
             UpdateScoreTexts();
+            ShowGameOverPanel();
+        }
+    }
+
+    private void ShowGameOverPanel()
+    {
+        if (gameOverPanel != null)
+        {
+            UpdateGameOverTexts();
+            gameOverPanel.SetActive(true);
+            rollButton.interactable = false;
+        }
+    }
+
+    private void ResetGame()
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+            rollButton.interactable = true;
         }
     }
 }

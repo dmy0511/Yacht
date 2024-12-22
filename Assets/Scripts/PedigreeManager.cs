@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PedigreeManager : MonoBehaviour
@@ -18,8 +19,10 @@ public class PedigreeManager : MonoBehaviour
     [SerializeField] private GoodsManager goodsManager;
 
     private GameObject lastSpawnedItem;
-
     private int totalConditionMetCount = 0;
+
+    [SerializeField] private Button globalSpeedUpButton;
+    private bool isGlobalSpeedUp = false;
 
     private string[] conditions =
     {
@@ -30,11 +33,30 @@ public class PedigreeManager : MonoBehaviour
     private bool conditionMetPreviously = false;
     private int currentSpawnIndex = 0;
 
-    private bool isRewardGiven = false;
+    private List<GameObject> spawnedItems = new List<GameObject>();
 
-    private void Start()
+    private bool isCheckingCondition = false;
+    private DiceRoll[] diceRolls;
+
+
+    void Start()
     {
         SetRandomCondition();
+
+        if (globalSpeedUpButton != null)
+        {
+            globalSpeedUpButton.onClick.AddListener(ToggleGlobalSpeedUp);
+        }
+
+        RestoreItems();
+
+        diceRolls = FindObjectsOfType<DiceRoll>();
+        textManager = FindObjectOfType<TextManager>();
+
+        if (textManager != null)
+        {
+            textManager.OnRollComplete += OnDiceRollComplete;
+        }
     }
 
     private void Update()
@@ -46,7 +68,6 @@ public class PedigreeManager : MonoBehaviour
         if (conditionMet && !conditionMetPreviously)
         {
             SpawnItems();
-
             SetRandomCondition();
         }
 
@@ -58,20 +79,25 @@ public class PedigreeManager : MonoBehaviour
         return lastSpawnedItem;
     }
 
+    public void ToggleGlobalSpeedUp()
+    {
+        isGlobalSpeedUp = !isGlobalSpeedUp;
+        float multiplier = isGlobalSpeedUp ? 1.25f : 1f;
+        SpeedUpCtrl.SetGlobalSpeedMultiplier(multiplier);
+
+        if (globalSpeedUpButton != null)
+        {
+            globalSpeedUpButton.GetComponent<Image>().color =
+                isGlobalSpeedUp ? Color.yellow : Color.white;
+        }
+    }
+
     void SpawnItems()
     {
         totalConditionMetCount++;
         textManager.IncrementCurrentScore();
 
-        string rewardType;
-        if (totalConditionMetCount % 4 == 0)
-            rewardType = "Roll";
-        else if (totalConditionMetCount % 4 == 1)
-            rewardType = "Coin";
-        else if (totalConditionMetCount % 4 == 2)
-            rewardType = "Diamond";
-        else
-            rewardType = "Clover";
+        string rewardType = DetermineRewardType();
 
         if (rewardType == "Roll")
         {
@@ -81,30 +107,28 @@ public class PedigreeManager : MonoBehaviour
 
         if (currentSpawnIndex < contentParents.Length && miningPrefabs[currentSpawnIndex] != null)
         {
+            float rewardAmount = CalculateRewardAmount(rewardType);
+            float baseFillDuration = CalculateBaseFillDuration(rewardType, rewardAmount);
+
             GameObject spawnedItem = Instantiate(miningPrefabs[currentSpawnIndex], contentParents[currentSpawnIndex].transform);
             lastSpawnedItem = spawnedItem;
 
-            Slider slider = spawnedItem.GetComponentInChildren<Slider>();
-            if (slider != null)
+            var itemData = new PedigreeDataManager.ItemData
             {
-                float rewardAmount = rewardType switch
-                {
-                    "Coin" => 500f,
-                    "Clover" => 200f,
-                    "Diamond" => 20f,
-                    _ => 0f
-                };
+                parentIndex = currentSpawnIndex,
+                floorNumber = $"{totalConditionMetCount}F",
+                rewardType = rewardType,
+                progress = 0f,
+                baseSpeed = 1f / baseFillDuration,
+                speedMultiplier = 1f,
+                rewardAmount = rewardAmount
+            };
 
-                float fillDuration = rewardType switch
-                {
-                    "Coin" => (rewardAmount / 500f) * 3f,
-                    "Clover" => rewardAmount / 100f,
-                    "Diamond" => rewardAmount * 1f,
-                    _ => 5f
-                };
+            int itemIndex = PedigreeDataManager.Instance.savedItems.Count;
+            PedigreeDataManager.Instance.savedItems.Add(itemData);
 
-                StartCoroutine(MonitorSliderWithAnimation(slider, rewardType, fillDuration, rewardAmount));
-            }
+            SpeedUpCtrl speedController = spawnedItem.AddComponent<SpeedUpCtrl>();
+            speedController.Initialize(rewardType, baseFillDuration, rewardAmount, textManager, itemIndex);
 
             TextMeshProUGUI textComponent = spawnedItem.GetComponentInChildren<TextMeshProUGUI>();
             if (textComponent != null)
@@ -116,38 +140,71 @@ public class PedigreeManager : MonoBehaviour
         currentSpawnIndex = (currentSpawnIndex + 1) % contentParents.Length;
     }
 
-    IEnumerator MonitorSliderWithAnimation(Slider slider, string rewardType, float fillDuration, float rewardAmount)
+    private float CalculateRewardAmount(string rewardType)
     {
-        float elapsedTime = 0f;
-
-        while (true)
+        return rewardType switch
         {
-            elapsedTime += Time.deltaTime;
-            slider.value = Mathf.Lerp(0f, 1f, elapsedTime / fillDuration);
+            "Coin" => 500f,
+            "Clover" => 200f,
+            "Diamond" => 20f,
+            _ => 0f
+        };
+    }
 
-            if (slider.value >= 1f)
+    private float CalculateBaseFillDuration(string rewardType, float rewardAmount)
+    {
+        return rewardType switch
+        {
+            "Coin" => (rewardAmount / 500f) * 3f,
+            "Clover" => rewardAmount / 100f,
+            "Diamond" => rewardAmount * 10f,
+            _ => 5f
+        };
+    }
+
+    private void RestoreItems()
+    {
+        for (int i = 0; i < PedigreeDataManager.Instance.savedItems.Count; i++)
+        {
+            var itemData = PedigreeDataManager.Instance.savedItems[i];
+            if (itemData.parentIndex < contentParents.Length && miningPrefabs[itemData.parentIndex] != null)
             {
-                switch (rewardType)
+                GameObject spawnedItem = Instantiate(miningPrefabs[itemData.parentIndex], contentParents[itemData.parentIndex].transform);
+
+                SpeedUpCtrl speedController = spawnedItem.AddComponent<SpeedUpCtrl>();
+                float baseFillDuration = 1f / itemData.baseSpeed;
+
+                speedController.InitializeWithoutStarting(
+                    itemData.rewardType,
+                    baseFillDuration,
+                    itemData.rewardAmount,
+                    textManager,
+                    i
+                );
+
+                MiningManager.Instance.RestoreMiningProcess(speedController, itemData.progress);
+
+                TextMeshProUGUI textComponent = spawnedItem.GetComponentInChildren<TextMeshProUGUI>();
+                if (textComponent != null)
                 {
-                    case "Coin":
-                        textManager.UpdateCoinText((int)rewardAmount);
-                        break;
-                    case "Clover":
-                        textManager.UpdateCloverText((int)rewardAmount);
-                        break;
-                    case "Diamond":
-                        textManager.UpdateDiamondText((int)rewardAmount);
-                        break;
+                    textComponent.text = itemData.floorNumber;
                 }
-
-                slider.value = 0f;
-                elapsedTime = 0f;
-
-                yield return new WaitForSeconds(0.1f);
             }
-
-            yield return null;
         }
+
+        currentSpawnIndex = PedigreeDataManager.Instance.savedItems.Count % contentParents.Length;
+    }
+
+    private string DetermineRewardType()
+    {
+        if (totalConditionMetCount % 4 == 0)
+            return "Roll";
+        else if (totalConditionMetCount % 4 == 1)
+            return "Coin";
+        else if (totalConditionMetCount % 4 == 2)
+            return "Diamond";
+        else
+            return "Clover";
     }
 
     private void SetRandomCondition()
@@ -157,14 +214,57 @@ public class PedigreeManager : MonoBehaviour
         pedigreeText2.text = currentCondition;
     }
 
+    private void OnDestroy()
+    {
+        if (textManager != null)
+        {
+            textManager.OnRollComplete -= OnDiceRollComplete;
+        }
+    }
+
+    private void OnDiceRollComplete()
+    {
+        StartCoroutine(CheckConditionAfterDelay());
+    }
+
+    private IEnumerator CheckConditionAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        while (diceRolls.Any(d => d.isRolling))
+        {
+            yield return null;
+        }
+
+        if (!isCheckingCondition)
+        {
+            isCheckingCondition = true;
+            bool conditionMet = CheckCondition();
+
+            if (conditionMet && !conditionMetPreviously)
+            {
+                SpawnItems();
+                SetRandomCondition();
+            }
+
+            conditionMetPreviously = conditionMet;
+            isCheckingCondition = false;
+        }
+    }
+
     public bool CheckCondition()
     {
+        if (diceRolls.Any(d => d.isRolling))
+        {
+            return false;
+        }
+
         HashSet<string> uniqueScores = new HashSet<string>();
         Dictionary<string, int> scoreCount = new Dictionary<string, int>();
 
         foreach (var scoreText in scoreTexts)
         {
-            if (scoreText != null && !string.IsNullOrEmpty(scoreText.text))
+            if (scoreText != null && !string.IsNullOrEmpty(scoreText.text) && scoreText.text != "?")
             {
                 string score = scoreText.text;
                 uniqueScores.Add(score);
@@ -174,6 +274,11 @@ public class PedigreeManager : MonoBehaviour
                 else
                     scoreCount[score] = 1;
             }
+        }
+
+        if (uniqueScores.Count == 0 || scoreCount.Values.Sum() != scoreTexts.Length)
+        {
+            return false;
         }
 
         switch (currentCondition)

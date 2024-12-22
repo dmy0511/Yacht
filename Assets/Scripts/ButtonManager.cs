@@ -68,6 +68,8 @@ public class ButtonManager : MonoBehaviour
                 element.isActive = false;
             }
         }
+
+        currentScene = GetCurrentSceneType();
     }
 
     public void Shop()
@@ -136,6 +138,16 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
+    public void MenuBtnOpen()
+    {
+        ToggleUIElement(UIElementType.Menu);
+    }
+
+    public void MenuBtnClose()
+    {
+        CloseUIElement(UIElementType.Menu);
+    }
+
     public void ChallengeBtnOpen()
     {
         ToggleUIElement(UIElementType.Challenge);
@@ -144,6 +156,36 @@ public class ButtonManager : MonoBehaviour
     public void ChallengeBtnClose()
     {
         CloseUIElement(UIElementType.Challenge);
+    }
+
+    public void AnnouncementBtnOpen()
+    {
+        ToggleUIElement(UIElementType.Announcement);
+    }
+
+    public void AnnouncementBtnClose()
+    {
+        CloseUIElement(UIElementType.Announcement);
+    }
+
+    public void MailBoxBtnOpen()
+    {
+        ToggleUIElement(UIElementType.MailBox);
+    }
+
+    public void MailBoxBtnClose()
+    {
+        CloseUIElement(UIElementType.MailBox);
+    }
+
+    public void SettingBtnOpen()
+    {
+        ToggleUIElement(UIElementType.Setting);
+    }
+
+    public void SettingBtnClose()
+    {
+        CloseUIElement(UIElementType.Setting);
     }
 
     public void PedigreeBtnOpen()
