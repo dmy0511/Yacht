@@ -5,6 +5,7 @@ using UnityEngine;
 public class PedigreeDataManager : MonoBehaviour
 {
     public static PedigreeDataManager Instance { get; private set; }
+    public int savedTotalConditionMetCount = 0;
 
     [System.Serializable]
     public struct ItemData

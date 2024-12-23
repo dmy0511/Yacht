@@ -162,6 +162,14 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    public void AddRollCount(int amount)
+    {
+        rollCount += amount;
+        PlayerPrefs.SetInt("RollCount", rollCount);
+        PlayerPrefs.Save();
+        UpdateRollText();
+    }
+
     public void UpdateScoreTexts()
     {
         bestText.text = "BEST " + bestScore.ToString() + "F";

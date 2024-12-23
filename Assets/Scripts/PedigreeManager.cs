@@ -95,6 +95,7 @@ public class PedigreeManager : MonoBehaviour
     void SpawnItems()
     {
         totalConditionMetCount++;
+        PedigreeDataManager.Instance.savedTotalConditionMetCount = totalConditionMetCount;
         textManager.IncrementCurrentScore();
 
         string rewardType = DetermineRewardType();
@@ -164,6 +165,8 @@ public class PedigreeManager : MonoBehaviour
 
     private void RestoreItems()
     {
+        totalConditionMetCount = PedigreeDataManager.Instance.savedTotalConditionMetCount;
+
         for (int i = 0; i < PedigreeDataManager.Instance.savedItems.Count; i++)
         {
             var itemData = PedigreeDataManager.Instance.savedItems[i];

@@ -22,7 +22,7 @@ public class GoodsManager : MonoBehaviour
                 textManager.UpdateDiamondText(20);
                 break;
             case "Roll":
-                textManager.UpdateRollText();
+                textManager.AddRollCount(5);
                 break;
         }
     }
