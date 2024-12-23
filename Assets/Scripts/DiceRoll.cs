@@ -116,11 +116,13 @@ public class DiceRoll : MonoBehaviour
         }
     }
 
-    private void Initialize()
+    public void Initialize()
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
         transform.rotation = new Quaternion(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360), 0);
+        diceFaceNum = 0;
+        isRolling = false;
     }
 
     private void Update()

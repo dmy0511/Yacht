@@ -18,9 +18,8 @@ public class Score : MonoBehaviour
     [SerializeField] private Vector2 unlockedSize = new Vector2(74f, 70f);
     [SerializeField] private Vector2 lockedSize = new Vector2(61.5f, 70.5f);
 
-    private int lockedRollCount = 0;
-    private bool wasLockedOnLastRoll = false;
     private TextManager textManager;
+    private int totalRollCount = 0;
 
     private void Awake()
     {
@@ -48,39 +47,14 @@ public class Score : MonoBehaviour
         }
     }
 
-    private bool IsAnyDiceLocked()
-    {
-        for (int i = 0; i < isLocked.Length; i++)
-        {
-            if (isLocked[i]) return true;
-        }
-        return false;
-    }
-
     private void CheckDiceRoll()
     {
-        bool currentlyLocked = IsAnyDiceLocked();
+        totalRollCount++;
 
-        if (wasLockedOnLastRoll && currentlyLocked)
-        {
-            lockedRollCount++;
-        }
-        else if (!currentlyLocked)
-        {
-            lockedRollCount = 0;
-        }
-        else if (!wasLockedOnLastRoll && currentlyLocked)
-        {
-            lockedRollCount = 1;
-        }
-
-        if (currentlyLocked && lockedRollCount >= 3)
+        if (totalRollCount >= 4)
         {
             ResetAllDice();
-            lockedRollCount = 0;
         }
-
-        wasLockedOnLastRoll = currentlyLocked;
     }
 
     private void ToggleLock(int index)
@@ -95,12 +69,6 @@ public class Score : MonoBehaviour
                 buttonImage.sprite = isLocked[index] ? lockedSprite : unlockedSprite;
                 Vector2 targetSize = isLocked[index] ? lockedSize : unlockedSize;
                 rectTransform.sizeDelta = targetSize;
-            }
-
-            if (!isLocked[index] && !IsAnyDiceLocked())
-            {
-                lockedRollCount = 0;
-                wasLockedOnLastRoll = false;
             }
         }
     }
@@ -137,6 +105,8 @@ public class Score : MonoBehaviour
                 die.diceFaceNum = 0;
             }
         }
+
+        totalRollCount = 0;
     }
 
     private void Update()
