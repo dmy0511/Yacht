@@ -22338,7 +22338,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 0.895
@@ -23601,8 +23601,7 @@ MonoBehaviour:
   - {fileID: -1250072183, guid: e585a5f1ea8c31e4cb8234d56b2b23ce, type: 3}
   - {fileID: -910367735, guid: c14cb459fb4c2544fbbf130c9564fa7f, type: 3}
   - {fileID: 422727545, guid: 765f2ac04b21d794eadf8f1f45971c50, type: 3}
-  - {fileID: 419361064, guid: a8958e2f74931b444a4f0e7b4e0919f7, type: 3}
-  - {fileID: -523413112, guid: 873c16ff5e9e7344883a0bd8a76c9350, type: 3}
+  - {fileID: -304000938, guid: d298c94ed6feda344a8da7a6c088b2a4, type: 3}
   - {fileID: -1017159550, guid: c3d104fc20889c14b9144dfd71df0169, type: 3}
   - {fileID: 1081220876, guid: 64d447e8a35b9a34aa23b7955d874b14, type: 3}
   - {fileID: -881470171, guid: 8aaa510939ef1234fa0f04ee8788ce81, type: 3}
