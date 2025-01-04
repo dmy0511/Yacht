@@ -5,15 +5,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 게임의 각종 업그레이드와 주사위 확률을 관리하는 클래스
 public class UpgradeManager : MonoBehaviour
 {
+    // UI 레벨 텍스트
     [Header("Level Texts")]
-    [SerializeField] private TextMeshProUGUI coinMiningLevelText;
-    [SerializeField] private TextMeshProUGUI cloverMiningLevelText;
-    [SerializeField] private TextMeshProUGUI diamondMiningLevelText;
-    [SerializeField] private TextMeshProUGUI rollCountDefenseLevelText;
-    [SerializeField] private TextMeshProUGUI showDicePointText;
+    [SerializeField] private TextMeshProUGUI coinMiningLevelText;      // 코인 채굴 레벨
+    [SerializeField] private TextMeshProUGUI cloverMiningLevelText;    // 클로버 채굴 레벨
+    [SerializeField] private TextMeshProUGUI diamondMiningLevelText;   // 다이아몬드 채굴 레벨
+    [SerializeField] private TextMeshProUGUI rollCountDefenseLevelText;// 주사위 방어 레벨
+    [SerializeField] private TextMeshProUGUI showDicePointText;        // 주사위 확률 포인트
 
+    // 업그레이드 버튼들
     [Header("Button Components")]
     [SerializeField] private Button coinMiningButton;
     [SerializeField] private Button cloverMiningButton;
@@ -21,12 +24,14 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private Button rollCountDefenseButton;
     [SerializeField] private Button showDiceButton;
 
+    // 주사위 버튼 스프라이트
     [Header("Show Dice Button Sprites")]
-    [SerializeField] private Sprite showDiceNormalSprite;
-    [SerializeField] private Sprite showDiceActivatedSprite;
+    [SerializeField] private Sprite showDiceNormalSprite;    // 기본 스프라이트
+    [SerializeField] private Sprite showDiceActivatedSprite; // 활성화 스프라이트
 
+    // 참조
     [Header("References")]
-    [SerializeField] private CashData cashData;
+    [SerializeField] private CashData cashData;    // 재화 데이터 참조
 
     [Serializable]
     public class ProbabilityRow
@@ -46,18 +51,19 @@ public class UpgradeManager : MonoBehaviour
         return probabilityRows[row].slots[slot];
     }
 
-    private const int MINING_COST = 500;
-    private const int SHOW_DICE_COST = 200;
-    private const int DEFENSE_COST = 100;
-    private const int MAX_SHOW_DICE_POINT = 21;
+    // 업그레이드 상수들
+    private const int MINING_COST = 500;           // 채굴 업그레이드 비용
+    private const int SHOW_DICE_COST = 200;        // 주사위 확률 비용
+    private const int DEFENSE_COST = 100;          // 방어 업그레이드 비용
+    private const int MAX_SHOW_DICE_POINT = 21;    // 최대 주사위 포인트
+    private const int MAX_MINING_LEVEL = 50;       // 최대 채굴 레벨
+    private const int MAX_DEFENSE_LEVEL = 10;      // 최대 방어 레벨
 
-    private const int MAX_MINING_LEVEL = 50;
-    private const float COIN_TIME_REDUCTION = 5f;
-    private const float CLOVER_TIME_REDUCTION = 3f;
-    private const float DIAMOND_TIME_REDUCTION = 2f;
-
-    private const int MAX_DEFENSE_LEVEL = 10;
-    private const float DEFENSE_RATE_PER_LEVEL = 5f;
+    // 채굴 시간 감소량
+    private const float COIN_TIME_REDUCTION = 5f;     // 코인 채굴 시간 감소
+    private const float CLOVER_TIME_REDUCTION = 3f;   // 클로버 채굴 시간 감소
+    private const float DIAMOND_TIME_REDUCTION = 2f;  // 다이아몬드 채굴 시간 감소
+    private const float DEFENSE_RATE_PER_LEVEL = 5f;  // 레벨당 방어율
 
     private const string ACTIVE_ROW_KEY = "ActiveProbabilityRow";
     private const string ACTIVE_SLOT_KEY = "ActiveProbabilitySlot";
@@ -66,6 +72,7 @@ public class UpgradeManager : MonoBehaviour
 
     private int currentShowDicePoint;
 
+    // 초기화
     private void Start()
     {
         LoadUpgradeLevels();
@@ -83,6 +90,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // 코인 채굴 업그레이드
     public void CoinMiningUp()
     {
         int currentLevel = PlayerPrefs.GetInt("CoinMiningLevel", 1);
@@ -103,6 +111,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // 클로버 채굴 업그레이드 
     public void CloverMiningUp()
     {
         int currentLevel = PlayerPrefs.GetInt("CloverMiningLevel", 1);
@@ -123,6 +132,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // 다이아몬드 채굴 업그레이드
     public void DiamondMiningUp()
     {
         int currentLevel = PlayerPrefs.GetInt("DiamondMiningLevel", 1);
@@ -143,6 +153,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // 주사위 확률 포인트 구매
     public void ShowDice()
     {
         int currentPoint = PlayerPrefs.GetInt("ShowDicePoint", 0);
@@ -178,6 +189,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // 롤 횟수 방어 업그레이드
     public void RollCountDefense()
     {
         int currentLevel = PlayerPrefs.GetInt("RollDefenseLevel", 1);
@@ -260,6 +272,7 @@ public class UpgradeManager : MonoBehaviour
             rollCountDefenseButton.interactable = defenseLevel < MAX_DEFENSE_LEVEL && hasDefenseCost;
     }
 
+    // 채굴 시간 감소량 반환
     public float GetMiningTimeReduction(string type)
     {
         switch (type)
@@ -293,6 +306,7 @@ public class UpgradeManager : MonoBehaviour
         return probabilityRows[rowIndex].activeSlots * 0.1f;
     }
 
+    // 저장된 상태 불러오기
     private void LoadSavedState()
     {
         currentShowDicePoint = PlayerPrefs.GetInt("ShowDicePoint", 0);
@@ -319,6 +333,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // UI 업데이트
     private void UpdateUI()
     {
         for (int row = 0; row < probabilityRows.Length; row++)

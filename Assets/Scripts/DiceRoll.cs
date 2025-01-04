@@ -4,19 +4,25 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 주사위 굴리기를 담당하는 클래스
 public class DiceRoll : MonoBehaviour
 {
     private UpgradeManager upgradeManager;
-
     private Rigidbody rb;
 
+    // 최대 랜덤 힘과 초기 굴리기 힘
     [SerializeField] private float maxRandomForceValue = 10f, startRollingForce = 10f;
 
-    private float forceX, forceY, forceZ;
+    private float forceX, forceY, forceZ;           // 주사위에 가해질 3축 힘
 
-    public int diceFaceNum;
-    public bool isRolling { get; private set; }
+    public int diceFaceNum;                         // 현재 주사위 눈
+    public bool isRolling { get; private set; }     // 굴리는 중인지 여부
 
+    // 주사위 굴리기 시작/종료 이벤트
+    public event System.Action OnRollStart;
+    public event System.Action OnRollEnd;
+
+    // 초기화
     private void Awake()
     {
         Initialize();
@@ -24,17 +30,33 @@ public class DiceRoll : MonoBehaviour
 
     public void RollDice()
     {
-        if (isRolling) return;
+        if (isRolling) return;      // 이미 굴리는 중이면 리턴
 
         isRolling = true;
+        OnRollStart?.Invoke();
         rb.isKinematic = false;
 
-        AdjustForceBasedOnProbability();
+        AdjustForceBasedOnProbability();        // 확률에 따른 힘 조절
 
+        // 주사위에 힘과 회전력 가하기
         rb.AddForce(Vector3.up * startRollingForce);
         rb.AddTorque(forceX, forceY, forceZ);
     }
 
+    // 주사위 정지 체크
+    private void Update()
+    {
+        if (rb.velocity == Vector3.zero)
+        {
+            if (isRolling)
+            {
+                isRolling = false;
+                OnRollEnd?.Invoke();
+            }
+        }
+    }
+
+    // 확률에 따른 힘 조절 메서드
     private void AdjustForceBasedOnProbability()
     {
         if (upgradeManager == null)
@@ -74,6 +96,7 @@ public class DiceRoll : MonoBehaviour
         forceZ = Random.Range(0, maxRandomForceValue);
     }
 
+    // 목표 숫자에 따른 힘 조절
     private void AdjustForceForNumber(int targetNumber)
     {
         switch (targetNumber)
@@ -116,23 +139,14 @@ public class DiceRoll : MonoBehaviour
         }
     }
 
+    // 주사위 초기화
     public void Initialize()
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        // 랜덤한 회전값으로 초기화
         transform.rotation = new Quaternion(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360), 0);
         diceFaceNum = 0;
         isRolling = false;
-    }
-
-    private void Update()
-    {
-        if (rb.velocity == Vector3.zero)
-        {
-            if (isRolling)
-            {
-                isRolling = false;
-            }
-        }
     }
 }

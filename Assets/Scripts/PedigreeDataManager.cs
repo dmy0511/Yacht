@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 족보 데이터를 관리하는 싱글톤 클래스
 public class PedigreeDataManager : MonoBehaviour
 {
+    // 싱글톤 인스턴스
     public static PedigreeDataManager Instance { get; private set; }
+
+    // 조건을 충족한 총 개수 저장
     public int savedTotalConditionMetCount = 0;
 
+    // 아이템 데이터 구조체
     [System.Serializable]
     public struct ItemData
     {
@@ -19,14 +24,16 @@ public class PedigreeDataManager : MonoBehaviour
         public float rewardAmount;     // 보상 양
     }
 
+    // 저장된 아이템 목록
     public List<ItemData> savedItems = new List<ItemData>();
 
+    // 싱글톤 초기화
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);  // 씬 전환시에도 유지
         }
         else
         {
@@ -34,6 +41,7 @@ public class PedigreeDataManager : MonoBehaviour
         }
     }
 
+    // 아이템의 진행도와 속도 배율 저장
     public void SaveItemProgress(int index, float progress, float speedMultiplier)
     {
         if (index < savedItems.Count)

@@ -6,39 +6,46 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// 족보 시스템 전반을 관리하는 클래스
 public class PedigreeManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI[] scoreTexts;
-    [SerializeField] private TextMeshProUGUI pedigreeText;
-    [SerializeField] private TextMeshProUGUI pedigreeText2;
+    // UI 텍스트 요소들
+    [SerializeField] private TextMeshProUGUI[] scoreTexts;      // 점수 텍스트들
+    [SerializeField] private TextMeshProUGUI pedigreeText;      // 조건 표시 텍스트 1
+    [SerializeField] private TextMeshProUGUI pedigreeText2;     // 조건 표시 텍스트 2
 
-    [SerializeField] private GameObject[] contentParents;
-    [SerializeField] private GameObject[] miningPrefabs;
+    // 프리팹과 부모 오브젝트
+    [SerializeField] private GameObject[] contentParents;       // 아이템 부모 오브젝트들
+    [SerializeField] private GameObject[] miningPrefabs;        // 채굴 프리팹들
 
-    [SerializeField] private TextManager textManager;
-    [SerializeField] private GoodsManager goodsManager;
+    // 매니저 참조
+    [SerializeField] private TextManager textManager;           // 텍스트 매니저
+    [SerializeField] private GoodsManager goodsManager;         // 재화 매니저
+    [SerializeField] private Score scoreManager;                // 점수 매니저
 
-    private GameObject lastSpawnedItem;
-    private int totalConditionMetCount = 0;
+    private GameObject lastSpawnedItem;                         // 마지막 생성된 아이템
+    private int totalConditionMetCount = 0;                     // 달성한 총 조건 수
 
-    [SerializeField] private Button globalSpeedUpButton;
-    private bool isGlobalSpeedUp = false;
+    // 전역 속도 증가 관련
+    [SerializeField] private Button globalSpeedUpButton;         // 전체 속도 증가 버튼
+    private bool isGlobalSpeedUp = false;                        // 전체 속도 증가 상태
 
-    private string[] conditions =
-    {
-        "더블", "오버", "트리플", "쿼드라플", "제곱", "풀하우스", "야추", "이븐", "오드", "16", "스몰", "라지"
-    };
+    // 조건 관련
+    private string[] conditions = {                              // 가능한 조건들
+       "더블", "오버", "트리플", "쿼드라플", "제곱", "풀하우스",
+       "야추", "이븐", "오드", "16", "스몰", "라지"
+   };
 
-    private string currentCondition;
-    private bool conditionMetPreviously = false;
-    private int currentSpawnIndex = 0;
+    private string currentCondition;                             // 현재 조건
+    private bool conditionMetPreviously = false;                 // 이전 조건 달성 여부
+    private int currentSpawnIndex = 0;                           // 현재 스폰 인덱스
 
-    private List<GameObject> spawnedItems = new List<GameObject>();
+    private List<GameObject> spawnedItems = new List<GameObject>();     // 생성된 아이템들
 
-    private bool isCheckingCondition = false;
-    private DiceRoll[] diceRolls;
+    private bool isCheckingCondition = false;   // 조건 체크 중인지 여부
+    private DiceRoll[] diceRolls;               // 주사위 배열
 
-
+    // 초기화
     void Start()
     {
         SetRandomCondition();
@@ -52,6 +59,7 @@ public class PedigreeManager : MonoBehaviour
 
         diceRolls = FindObjectsOfType<DiceRoll>();
         textManager = FindObjectOfType<TextManager>();
+        scoreManager = FindObjectOfType<Score>();
 
         if (textManager != null)
         {
@@ -59,6 +67,7 @@ public class PedigreeManager : MonoBehaviour
         }
     }
 
+    // 매 프레임 업데이트
     private void Update()
     {
         if (scoreTexts.Length == 0) return;
@@ -74,29 +83,25 @@ public class PedigreeManager : MonoBehaviour
         conditionMetPreviously = conditionMet;
     }
 
-    public GameObject GetLastSpawnedItem()
-    {
-        return lastSpawnedItem;
-    }
-
-    public void ToggleGlobalSpeedUp()
-    {
-        isGlobalSpeedUp = !isGlobalSpeedUp;
-        float multiplier = isGlobalSpeedUp ? 1.25f : 1f;
-        SpeedUpCtrl.SetGlobalSpeedMultiplier(multiplier);
-
-        if (globalSpeedUpButton != null)
-        {
-            globalSpeedUpButton.GetComponent<Image>().color =
-                isGlobalSpeedUp ? Color.yellow : Color.white;
-        }
-    }
-
+    // 아이템 생성
     void SpawnItems()
     {
         totalConditionMetCount++;
         PedigreeDataManager.Instance.savedTotalConditionMetCount = totalConditionMetCount;
         textManager.IncrementCurrentScore();
+
+        foreach (var dice in diceRolls)
+        {
+            if (dice != null)
+            {
+                dice.Initialize();
+            }
+        }
+
+        if (scoreManager != null)
+        {
+            scoreManager.ResetAllDice();
+        }
 
         string rewardType = DetermineRewardType();
 
@@ -141,28 +146,7 @@ public class PedigreeManager : MonoBehaviour
         currentSpawnIndex = (currentSpawnIndex + 1) % contentParents.Length;
     }
 
-    private float CalculateRewardAmount(string rewardType)
-    {
-        return rewardType switch
-        {
-            "Coin" => 500f,
-            "Clover" => 200f,
-            "Diamond" => 20f,
-            _ => 0f
-        };
-    }
-
-    private float CalculateBaseFillDuration(string rewardType, float rewardAmount)
-    {
-        return rewardType switch
-        {
-            "Coin" => (rewardAmount / 5f) * 3f,
-            "Clover" => rewardAmount / 1f,
-            "Diamond" => rewardAmount * 10f,
-            _ => 5f
-        };
-    }
-
+    // 아이템 복원
     private void RestoreItems()
     {
         totalConditionMetCount = PedigreeDataManager.Instance.savedTotalConditionMetCount;
@@ -198,38 +182,7 @@ public class PedigreeManager : MonoBehaviour
         currentSpawnIndex = PedigreeDataManager.Instance.savedItems.Count % contentParents.Length;
     }
 
-    private string DetermineRewardType()
-    {
-        if (totalConditionMetCount % 4 == 0)
-            return "Roll";
-        else if (totalConditionMetCount % 4 == 1)
-            return "Coin";
-        else if (totalConditionMetCount % 4 == 2)
-            return "Diamond";
-        else
-            return "Clover";
-    }
-
-    private void SetRandomCondition()
-    {
-        currentCondition = conditions[Random.Range(0, conditions.Length)];
-        pedigreeText.text = currentCondition;
-        pedigreeText2.text = currentCondition;
-    }
-
-    private void OnDestroy()
-    {
-        if (textManager != null)
-        {
-            textManager.OnRollComplete -= OnDiceRollComplete;
-        }
-    }
-
-    private void OnDiceRollComplete()
-    {
-        StartCoroutine(CheckConditionAfterDelay());
-    }
-
+    // 조건 체크
     private IEnumerator CheckConditionAfterDelay()
     {
         yield return new WaitForSeconds(0.1f);
@@ -253,6 +206,82 @@ public class PedigreeManager : MonoBehaviour
             conditionMetPreviously = conditionMet;
             isCheckingCondition = false;
         }
+    }
+
+    // 보상 타입 결정
+    private string DetermineRewardType()
+    {
+        if (totalConditionMetCount % 4 == 0)
+            return "Roll";
+        else if (totalConditionMetCount % 4 == 1)
+            return "Coin";
+        else if (totalConditionMetCount % 4 == 2)
+            return "Diamond";
+        else
+            return "Clover";
+    }
+
+    // 보상량 계산
+    private float CalculateRewardAmount(string rewardType)
+    {
+        return rewardType switch
+        {
+            "Coin" => 500f,
+            "Clover" => 200f,
+            "Diamond" => 20f,
+            _ => 0f
+        };
+    }
+
+    // 기본 채우기 시간 계산
+    private float CalculateBaseFillDuration(string rewardType, float rewardAmount)
+    {
+        return rewardType switch
+        {
+            "Coin" => (rewardAmount / 5f) * 3f,
+            "Clover" => rewardAmount / 1f,
+            "Diamond" => rewardAmount * 10f,
+            _ => 5f
+        };
+    }
+
+    // 속도 증가 토글
+    public void ToggleGlobalSpeedUp()
+    {
+        isGlobalSpeedUp = !isGlobalSpeedUp;
+        float multiplier = isGlobalSpeedUp ? 1.25f : 1f;
+        SpeedUpCtrl.SetGlobalSpeedMultiplier(multiplier);
+
+        if (globalSpeedUpButton != null)
+        {
+            globalSpeedUpButton.GetComponent<Image>().color =
+                isGlobalSpeedUp ? Color.yellow : Color.white;
+        }
+    }
+
+    public GameObject GetLastSpawnedItem()
+    {
+        return lastSpawnedItem;
+    }
+
+    private void SetRandomCondition()
+    {
+        currentCondition = conditions[Random.Range(0, conditions.Length)];
+        pedigreeText.text = currentCondition;
+        pedigreeText2.text = currentCondition;
+    }
+
+    private void OnDestroy()
+    {
+        if (textManager != null)
+        {
+            textManager.OnRollComplete -= OnDiceRollComplete;
+        }
+    }
+
+    private void OnDiceRollComplete()
+    {
+        StartCoroutine(CheckConditionAfterDelay());
     }
 
     public bool CheckCondition()

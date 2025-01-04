@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// UI에 아이템을 생성하는 스포너 클래스
 public class ContentSpawner : MonoBehaviour
 {
-    public GameObject contentParent;
+    public GameObject contentParent;    // 생성된 아이템이 들어갈 부모 오브젝트
+    public GameObject itemPrefab;       // 생성할 아이템 프리팹
+    private Button spawnButton;          // 스폰 버튼
 
-    public GameObject itemPrefab;
-
-    private Button spawnButton;
-
+    // 시작시 버튼 컴포넌트 가져오고 클릭 이벤트 연결
     void Start()
     {
         spawnButton = GetComponent<Button>();
@@ -18,6 +18,7 @@ public class ContentSpawner : MonoBehaviour
         spawnButton.onClick.AddListener(SpawnItem);
     }
 
+    // 아이템 생성 메서드
     public void SpawnItem()
     {
         if (contentParent != null && itemPrefab != null)
