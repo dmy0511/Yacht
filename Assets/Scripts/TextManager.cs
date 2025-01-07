@@ -82,7 +82,7 @@ public class TextManager : MonoBehaviour
         if (rollText != null) UpdateRollText();
         if (bestText != null && currentText != null) UpdateScoreTexts();
 
-        if (rollButton != null)
+        if (rollButton != null && Roll != null)
         {
             rollButton.onClick.RemoveAllListeners();
             rollButton.onClick.AddListener(OnRollDice);
@@ -382,7 +382,7 @@ public class TextManager : MonoBehaviour
                 yield break;
             }
             
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(3.3f);
         }
     }
 
