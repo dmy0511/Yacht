@@ -11,7 +11,7 @@ public class DiceRoll : MonoBehaviour
     private Rigidbody rb;
     //public GameObject Roll;
     // 최대 랜덤 힘과 초기 굴리기 힘
-    [SerializeField] private float maxRandomForceValue = 10f, startRollingForce = 10f;
+    [SerializeField] private float maxRandomForceValue = 5f, startRollingForce = 10f, minRandomForceValue = 4f;
 
     private float forceX, forceY, forceZ;           // 주사위에 가해질 3축 힘
 
@@ -22,6 +22,19 @@ public class DiceRoll : MonoBehaviour
     public event System.Action OnRollStart;
     public event System.Action OnRollEnd;
 
+
+    void Start()
+    {
+        BoxCollider diceCollider = GetComponent<BoxCollider>();
+
+        // 물리 재질 설정
+        PhysicMaterial diceMaterial = new PhysicMaterial();
+        diceMaterial.bounciness = 0.2f;
+        diceMaterial.dynamicFriction = 0f;
+        diceMaterial.staticFriction = 0f;
+        diceMaterial.bounceCombine = PhysicMaterialCombine.Average;
+        diceCollider.material = diceMaterial;
+    }
     // 초기화
     private void Awake()
     {
@@ -61,9 +74,9 @@ public class DiceRoll : MonoBehaviour
     {
         if (upgradeManager == null)
         {
-            forceX = Random.Range(0, maxRandomForceValue);
-            forceY = Random.Range(0, maxRandomForceValue);
-            forceZ = Random.Range(0, maxRandomForceValue);
+            forceX = Random.Range(minRandomForceValue, maxRandomForceValue);
+            forceY = Random.Range(minRandomForceValue, maxRandomForceValue);
+            forceZ = Random.Range(minRandomForceValue, maxRandomForceValue);
             return;
         }
 
@@ -91,9 +104,9 @@ public class DiceRoll : MonoBehaviour
             }
         }
 
-        forceX = Random.Range(0, maxRandomForceValue);
-        forceY = Random.Range(0, maxRandomForceValue);
-        forceZ = Random.Range(0, maxRandomForceValue);
+        forceX = Random.Range(minRandomForceValue, maxRandomForceValue);
+        forceY = Random.Range(minRandomForceValue, maxRandomForceValue);
+        forceZ = Random.Range(minRandomForceValue, maxRandomForceValue);
     }
 
     // 목표 숫자에 따른 힘 조절
@@ -148,5 +161,15 @@ public class DiceRoll : MonoBehaviour
         transform.rotation = new Quaternion(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360), 0);
         diceFaceNum = 0;
         isRolling = false;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            // 벽과 충돌 시 약간의 반발력 추가
+            Vector3 reflection = Vector3.Reflect(rb.velocity, collision.contacts[0].normal);
+            rb.velocity = reflection * 0.5f; // 반발력 감소
+
+        }
     }
 }
