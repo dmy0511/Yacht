@@ -19251,6 +19251,12 @@ MonoBehaviour:
   rollButton: {fileID: 1036215393}
   bestText: {fileID: 546269519}
   currentText: {fileID: 1953118260}
+  Roll:
+  - {fileID: 2096721773}
+  - {fileID: 288987636}
+  - {fileID: 233643729}
+  - {fileID: 1255785422}
+  - {fileID: 30804370}
   upgradeManager: {fileID: 0}
   gameOverBestText: {fileID: 1177264594}
   gameOverCurrentText: {fileID: 1009763193}
@@ -29393,6 +29399,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b483498c48e4a7c498df2be84084e02a, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b483498c48e4a7c498df2be84084e02a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6569710911100203790, guid: b483498c48e4a7c498df2be84084e02a, type: 3}
       propertyPath: m_Layer

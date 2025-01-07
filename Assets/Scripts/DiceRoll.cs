@@ -9,7 +9,7 @@ public class DiceRoll : MonoBehaviour
 {
     private UpgradeManager upgradeManager;
     private Rigidbody rb;
-
+    //public GameObject Roll;
     // ÃÖ´ë ·£´ý Èû°ú ÃÊ±â ±¼¸®±â Èû
     [SerializeField] private float maxRandomForceValue = 10f, startRollingForce = 10f;
 

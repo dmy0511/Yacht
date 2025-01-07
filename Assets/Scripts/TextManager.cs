@@ -18,6 +18,8 @@ public class TextManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bestText;      // 최고 점수
     [SerializeField] private TextMeshProUGUI currentText;   // 현재 점수
 
+    public GameObject[] Roll;
+
     // 게임 상태 변수들
     private int rollCount = 100;        // 남은 주사위 굴리기 횟수
     private int diceRollAttempts = 0;   // 현재 시도 횟수
@@ -52,6 +54,8 @@ public class TextManager : MonoBehaviour
     // 초기화
     void Start()
     {
+        for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(false);
+
         if (!PlayerPrefs.HasKey("FirstLoad"))
         {
             PlayerPrefs.SetInt("CurrentCoin", 0);
@@ -296,6 +300,8 @@ public class TextManager : MonoBehaviour
     // 주사위 굴리기 처리
     public void OnRollDice()
     {
+        for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(true);
+
         if (!rollButton.interactable || Time.time - lastClickTime < CLICK_DELAY)
         {
             return;
@@ -371,11 +377,12 @@ public class TextManager : MonoBehaviour
 
             if (allStopped)
             {
+                for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(false);
                 rollButton.interactable = true;
                 yield break;
             }
-
-            yield return null;
+            
+            yield return new WaitForSeconds(3f);
         }
     }
 
