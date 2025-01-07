@@ -377,7 +377,14 @@ public class TextManager : MonoBehaviour
 
             if (allStopped)
             {
-                for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(false);
+                for (int i = 0; i < Roll.Length; i++)
+                {
+                    Roll[i].SetActive(false);
+                    Roll[i].transform.SetPositionAndRotation(
+                        transform.position = new Vector3(0f, 1.8f, -13f),
+                        transform.rotation = Quaternion.Euler(0f, 0f, 0f));
+                }
+
                 rollButton.interactable = true;
                 yield break;
             }
