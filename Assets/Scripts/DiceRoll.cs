@@ -9,7 +9,8 @@ public class DiceRoll : MonoBehaviour
 {
     private UpgradeManager upgradeManager;
     private Rigidbody rb;
-    //public GameObject Roll;
+    [SerializeField] public int diceIndex;
+
     // 최대 랜덤 힘과 초기 굴리기 힘
     [SerializeField] private float maxRandomForceValue = 5f, startRollingForce = 10f, minRandomForceValue = 4f;
 
@@ -161,15 +162,5 @@ public class DiceRoll : MonoBehaviour
         transform.rotation = new Quaternion(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360), 0);
         diceFaceNum = 0;
         isRolling = false;
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            // 벽과 충돌 시 약간의 반발력 추가
-            Vector3 reflection = Vector3.Reflect(rb.velocity, collision.contacts[0].normal);
-            rb.velocity = reflection * 0.5f; // 반발력 감소
-
-        }
     }
 }

@@ -13,12 +13,14 @@ public class TextManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI cloverText;    // 클로버
     [SerializeField] private TextMeshProUGUI rollText;      // 롤 횟수
     [SerializeField] private Button rollButton;             // 롤 버튼
+    [SerializeField] private Score scoreManager;
 
     // 점수 UI
     [SerializeField] private TextMeshProUGUI bestText;      // 최고 점수
     [SerializeField] private TextMeshProUGUI currentText;   // 현재 점수
 
     public GameObject[] Roll;
+    private PedigreeManager pedigreeManager;
 
     // 게임 상태 변수들
     private int rollCount = 100;        // 남은 주사위 굴리기 횟수
@@ -54,6 +56,11 @@ public class TextManager : MonoBehaviour
     // 초기화
     void Start()
     {
+        if (scoreManager == null)
+        {
+            scoreManager = FindObjectOfType<Score>();
+        }
+
         for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(false);
 
         if (!PlayerPrefs.HasKey("FirstLoad"))
@@ -300,7 +307,18 @@ public class TextManager : MonoBehaviour
     // 주사위 굴리기 처리
     public void OnRollDice()
     {
-        for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(true);
+        if (scoreManager != null)
+        {
+            // 잠금되지 않은 주사위만 Roll 활성화
+            for (int i = 0; i < Roll.Length; i++)
+            {
+                if (!scoreManager.GetLockState(i))
+                {
+                    Roll[i].SetActive(true);
+                }
+                // 여기서 카운트를 증가시키면 안됨
+            }
+        }
 
         if (!rollButton.interactable || Time.time - lastClickTime < CLICK_DELAY)
         {
@@ -313,40 +331,41 @@ public class TextManager : MonoBehaviour
             lastClickTime = Time.time;
             rollingDice.Clear();
 
+            // 여기서 먼저 diceRollAttempts를 5로 설정
+            diceRollAttempts = 5;
+
             DiceRoll[] diceRolls = FindObjectsOfType<DiceRoll>();
             foreach (var diceRoll in diceRolls)
             {
-                if (diceRoll != null && !diceRoll.isRolling)
+                if (diceRoll != null && !diceRoll.isRolling &&
+                scoreManager != null && !scoreManager.GetLockState(diceRoll.diceIndex))
                 {
                     rollingDice.Add(diceRoll);
                     diceRoll.RollDice();
-                    diceRollAttempts++;
                 }
             }
 
-            if (diceRollAttempts >= 5)
+            // 이미 5로 설정했으므로 항상 실행됨
+            float defenseRate = 0f;
+            if (upgradeManager != null)
             {
-                float defenseRate = 0f;
-                if (upgradeManager != null)
-                {
-                    defenseRate = upgradeManager.GetRollDefenseRate();
-                }
-
-                bool isDefenseSuccessful = Random.Range(0f, 100f) < defenseRate;
-
-                if (!isDefenseSuccessful)
-                {
-                    rollCount--;
-                    PlayerPrefs.SetInt("RollCount", rollCount);
-                    PlayerPrefs.Save();
-                }
-
-                UpdateRollText();
-                OnRollComplete?.Invoke();
-                diceRollAttempts = 0;
-
-                StartCoroutine(CheckDiceStopCoroutine());
+                defenseRate = upgradeManager.GetRollDefenseRate();
             }
+
+            bool isDefenseSuccessful = Random.Range(0f, 100f) < defenseRate;
+
+            if (!isDefenseSuccessful)
+            {
+                rollCount--;
+                PlayerPrefs.SetInt("RollCount", rollCount);
+                PlayerPrefs.Save();
+            }
+
+            UpdateRollText();
+            OnRollComplete?.Invoke();
+            diceRollAttempts = 0;
+
+            StartCoroutine(CheckDiceStopCoroutine());
         }
 
         if (rollCount <= 0)
@@ -379,16 +398,19 @@ public class TextManager : MonoBehaviour
             {
                 for (int i = 0; i < Roll.Length; i++)
                 {
-                    Roll[i].SetActive(false);
-                    Roll[i].transform.SetPositionAndRotation(
-                        transform.position = new Vector3(0f, 1.8f, -13f),
-                        transform.rotation = Quaternion.Euler(0f, 0f, 0f));
+                    if (scoreManager != null && !scoreManager.GetLockState(i))
+                    {
+                        Roll[i].SetActive(false);
+                        Roll[i].transform.SetPositionAndRotation(
+                            transform.position = new Vector3(0f, 1.8f, -13f),
+                            transform.rotation = Quaternion.Euler(0f, 0f, 0f));
+                        StartCoroutine(scoreManager.appearedDiceDelay(i));
+                    }
                 }
 
                 rollButton.interactable = true;
                 yield break;
             }
-            
             yield return new WaitForSeconds(3.3f);
         }
     }

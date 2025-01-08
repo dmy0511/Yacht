@@ -284,23 +284,21 @@ public class PedigreeManager : MonoBehaviour
         StartCoroutine(CheckConditionAfterDelay());
     }
 
+
     public bool CheckCondition()
     {
-        if (diceRolls.Any(d => d.isRolling))
-        {
-            return false;
-        }
+        if (scoreManager == null) return false;
 
-        HashSet<string> uniqueScores = new HashSet<string>();
-        Dictionary<string, int> scoreCount = new Dictionary<string, int>();
+        int[] diceScores = scoreManager.GetDiceScores();
+        if (diceScores == null || diceScores.Length == 0) return false;
 
-        foreach (var scoreText in scoreTexts)
+        HashSet<int> uniqueScores = new HashSet<int>(diceScores.Where(score => score != 0));
+        Dictionary<int, int> scoreCount = new Dictionary<int, int>();
+
+        foreach (int score in diceScores)
         {
-            if (scoreText != null && !string.IsNullOrEmpty(scoreText.text) && scoreText.text != "?")
+            if (score != 0)  // 0은 아직 굴리지 않은 주사위
             {
-                string score = scoreText.text;
-                uniqueScores.Add(score);
-
                 if (scoreCount.ContainsKey(score))
                     scoreCount[score]++;
                 else
@@ -308,7 +306,7 @@ public class PedigreeManager : MonoBehaviour
             }
         }
 
-        if (uniqueScores.Count == 0 || scoreCount.Values.Sum() != scoreTexts.Length)
+        if (uniqueScores.Count == 0 || scoreCount.Values.Sum() != diceScores.Length)
         {
             return false;
         }
@@ -316,11 +314,10 @@ public class PedigreeManager : MonoBehaviour
         switch (currentCondition)
         {
             case "더블":
-                bool result = scoreCount.ContainsValue(2);
-                return result;
+                return scoreCount.ContainsValue(2);
 
             case "오버":
-                return uniqueScores.Count == scoreTexts.Length;
+                return uniqueScores.Count == diceRolls.Length;
 
             case "트리플":
                 return scoreCount.ContainsValue(3);
@@ -340,37 +337,22 @@ public class PedigreeManager : MonoBehaviour
                 return scoreCount.ContainsValue(2) && scoreCount.ContainsValue(3);
 
             case "야추":
-                return scoreCount.ContainsValue(scoreTexts.Length);
+                return scoreCount.ContainsValue(diceRolls.Length);
 
             case "이븐":
-                foreach (var score in uniqueScores)
-                {
-                    if (int.TryParse(score, out int num) && num % 2 != 0)
-                        return false;
-                }
-                return true;
+                return uniqueScores.All(num => num % 2 == 0);
 
             case "오드":
-                foreach (var score in uniqueScores)
-                {
-                    if (int.TryParse(score, out int num) && num % 2 == 0)
-                        return false;
-                }
-                return true;
+                return uniqueScores.All(num => num % 2 != 0);
 
             case "16":
-                foreach (var score in uniqueScores)
-                {
-                    if (score != "1" && score != "6")
-                        return false;
-                }
-                return true;
+                return uniqueScores.All(num => num == 1 || num == 6);
 
             case "스몰":
-                return uniqueScores.SetEquals(new HashSet<string> { "1", "2", "3", "4", "5" });
+                return uniqueScores.SetEquals(new HashSet<int> { 1, 2, 3, 4, 5 });
 
             case "라지":
-                return uniqueScores.SetEquals(new HashSet<string> { "2", "3", "4", "5", "6" });
+                return uniqueScores.SetEquals(new HashSet<int> { 2, 3, 4, 5, 6 });
 
             default:
                 return false;
