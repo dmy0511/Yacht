@@ -13,7 +13,7 @@ public class TextManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI diamondText;   // 다이아
     [SerializeField] private TextMeshProUGUI cloverText;    // 클로버
     [SerializeField] private TextMeshProUGUI rollText;      // 롤 횟수
-    [SerializeField] private Button rollButton;             // 롤 버튼
+    [SerializeField] public Button rollButton;             // 롤 버튼
     [SerializeField] private Score scoreManager;
 
     // 점수 UI
@@ -313,7 +313,20 @@ public class TextManager : MonoBehaviour
         rollingDiceCount++;
         if (rollingDiceCount >= 5)
         {
-            rollButton.interactable = true;
+            // 주사위가 모두 멈췄을 때, 잠금 상태를 확인
+            if (scoreManager != null)
+            {
+                bool hasUnlockedDice = false;
+                for (int i = 0; i < Roll.Length; i++)
+                {
+                    if (!scoreManager.GetLockState(i))
+                    {
+                        hasUnlockedDice = true;
+                        break;
+                    }
+                }
+                rollButton.interactable = hasUnlockedDice;
+            }
             rollingDiceCount = 0;
         }
     }
@@ -324,73 +337,89 @@ public class TextManager : MonoBehaviour
         if (scoreManager != null)
         {
             // 잠금되지 않은 주사위만 Roll 활성화
+            int unlockedCount = 0;
             for (int i = 0; i < Roll.Length; i++)
             {
                 if (!scoreManager.GetLockState(i))
                 {
                     Roll[i].SetActive(true);
+                    unlockedCount++;
                 }
-                // 여기서 카운트를 증가시키면 안됨
             }
-        }
 
-        if (!rollButton.interactable || Time.time - lastClickTime < CLICK_DELAY)
-        {
-            return;
-        }
-
-        if (rollCount > 0 && diceRollAttempts < 5)
-        {
-            rollButton.interactable = false;
-            lastClickTime = Time.time;
-            rollingDice.Clear();
-
-            // 여기서 먼저 diceRollAttempts를 5로 설정
-            diceRollAttempts = 5;
-
-            DiceRoll[] diceRolls = FindObjectsOfType<DiceRoll>();
-            foreach (var diceRoll in diceRolls)
+            // 모든 주사위가 잠겼는지 확인
+            if (unlockedCount == 0)
             {
-                if (diceRoll != null && !diceRoll.isRolling &&
-                scoreManager != null && !scoreManager.GetLockState(diceRoll.diceIndex))
+                rollButton.interactable = false;  // 모든 주사위가 잠겼을 때만 비활성화
+            }
+            else
+            {
+                // 다른 조건들(주사위가 굴러가는 중이 아닐 때 등)이 충족되면 활성화
+                if (Time.time - lastClickTime >= CLICK_DELAY && rollCount > 0)
                 {
-                    rollingDice.Add(diceRoll);
-                    diceRoll.RollDice();
+                    rollButton.interactable = true;
                 }
             }
 
-            // 이미 5로 설정했으므로 항상 실행됨
-            float defenseRate = 0f;
-            if (upgradeManager != null)
+            // 버튼이 비활성화되어있거나 딜레이 중이면 리턴
+            if (!rollButton.interactable || Time.time - lastClickTime < CLICK_DELAY)
             {
-                defenseRate = upgradeManager.GetRollDefenseRate();
+                return;
             }
 
-            bool isDefenseSuccessful = Random.Range(0f, 100f) < defenseRate;
-
-            if (!isDefenseSuccessful)
+            if (rollCount > 0 && diceRollAttempts < 5)
             {
-                rollCount--;
-                PlayerPrefs.SetInt("RollCount", rollCount);
+                rollButton.interactable = false;
+                lastClickTime = Time.time;
+                rollingDice.Clear();
+
+                // 여기서 먼저 diceRollAttempts를 5로 설정
+                diceRollAttempts = 5;
+
+                DiceRoll[] diceRolls = FindObjectsOfType<DiceRoll>();
+                foreach (var diceRoll in diceRolls)
+                {
+                    if (diceRoll != null && !diceRoll.isRolling &&
+                    scoreManager != null && !scoreManager.GetLockState(diceRoll.diceIndex))
+                    {
+                        rollingDice.Add(diceRoll);
+                        diceRoll.RollDice();
+                    }
+                }
+
+                // 이미 5로 설정했으므로 항상 실행됨
+                float defenseRate = 0f;
+                if (upgradeManager != null)
+                {
+                    defenseRate = upgradeManager.GetRollDefenseRate();
+                }
+
+                bool isDefenseSuccessful = Random.Range(0f, 100f) < defenseRate;
+
+                if (!isDefenseSuccessful)
+                {
+                    rollCount--;
+                    PlayerPrefs.SetInt("RollCount", rollCount);
+                    PlayerPrefs.Save();
+                }
+
+                UpdateRollText();
+                OnRollComplete?.Invoke();
+                diceRollAttempts = 0;
+
+                StartCoroutine(CheckDiceStopCoroutine());
+            }
+
+            if (rollCount <= 0)
+            {
+                rollText.text = "게임 오버";
+                UpdateBestScore();
+                currentScore = 0;
+                PlayerPrefs.SetInt("CurrentScore", currentScore);
                 PlayerPrefs.Save();
+                UpdateScoreTexts();
+                ShowGameOverPanel();
             }
-
-            UpdateRollText();
-            OnRollComplete?.Invoke();
-            diceRollAttempts = 0;
-
-            StartCoroutine(CheckDiceStopCoroutine());
-        }
-
-        if (rollCount <= 0)
-        {
-            rollText.text = "게임 오버";
-            UpdateBestScore();
-            currentScore = 0;
-            PlayerPrefs.SetInt("CurrentScore", currentScore);
-            PlayerPrefs.Save();
-            UpdateScoreTexts();
-            ShowGameOverPanel();
         }
     }
 
@@ -422,7 +451,20 @@ public class TextManager : MonoBehaviour
                     }
                 }
 
-                rollButton.interactable = true;
+                // 주사위가 모두 멈췄을 때, 잠금 상태를 다시 확인
+                if (scoreManager != null)
+                {
+                    bool hasUnlockedDice = false;
+                    for (int i = 0; i < Roll.Length; i++)
+                    {
+                        if (!scoreManager.GetLockState(i))
+                        {
+                            hasUnlockedDice = true;
+                            break;
+                        }
+                    }
+                    rollButton.interactable = hasUnlockedDice;
+                }
                 yield break;
             }
             yield return new WaitForSeconds(3.3f);

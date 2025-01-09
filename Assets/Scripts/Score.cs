@@ -108,7 +108,7 @@ public class Score : MonoBehaviour
         }
         foreach (var die in dice)
         {
-            if (die != null)  die.diceFaceNum = 0;
+            if (die != null) die.diceFaceNum = 0;
         }
         totalRollCount = 0;
     }
@@ -121,6 +121,34 @@ public class Score : MonoBehaviour
 
         // 모든 DiceScore가 활성화되었는지 체크
         bool allDiceScoreActive = true;
+
+        bool allLocked = true;
+        int lockedCount = 0;
+
+        TextManager textManager = FindObjectOfType<TextManager>();
+        if (textManager != null && textManager.rollButton != null)
+        {
+            if (!isDiceRolling) // 주사위가 굴러가고 있지 않을 때만 버튼 상태 변경
+            {
+                textManager.rollButton.interactable = !allLocked;
+            }
+        }
+        for (int i = 0; i < isLocked.Length; i++)
+        {
+            if (isLocked[i])
+                lockedCount++;
+            else
+                allLocked = false;
+        }
+
+        // 잠금 상태가 변경될 때만 디버그 로그 출력
+        if (lockedCount != previousLockedCount)
+        {
+            Debug.Log($"잠긴 주사위: {lockedCount}개, 남은 주사위: {5 - lockedCount}개");
+            previousLockedCount = lockedCount;
+        }
+
+
         for (int i = 0; i < DiceScore.Length; i++)
         {
             if (!DiceScore[i].activeSelf && !isLocked[i])
@@ -167,12 +195,13 @@ public class Score : MonoBehaviour
                     DiceScore[i].SetActive(false);
                     break;
             }
-
             // 조건 체크
             if (pedigreeManager != null) pedigreeManager.CheckCondition();
         }
 
     }
+
+    private int previousLockedCount = 0;  // 이전 잠금 상태를 저장할 변수
 
     // 이벤트 구독 해제
     private void OnDestroy()
@@ -207,5 +236,13 @@ public class Score : MonoBehaviour
     {
         if (index >= 0 && index < isLocked.Length) return isLocked[index];
         return false;
+    }
+    public bool IsAllDiceLocked()
+    {
+        int lockedCount = 0;
+        for (int i = 0; i < isLocked.Length; i++)
+            if (isLocked[i]) lockedCount++;
+
+        return lockedCount >= 5;
     }
 }
