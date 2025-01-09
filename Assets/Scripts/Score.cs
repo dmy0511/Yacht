@@ -10,7 +10,6 @@ public class Score : MonoBehaviour
 {
     // UI 요소들
     [SerializeField] private DiceRoll[] dice;                   // 주사위 배열
-    //<s[SerializeField] private TextMeshProUGUI[] scoreTexts;      // 점수 텍스트들
     [SerializeField] public GameObject[] DiceScore;              // 점수 다이스
     [SerializeField] private Button[] LockButton;               // 잠금 버튼들
     [SerializeField] private Sprite unlockedSprite;             // 잠금해제 이미지
@@ -49,6 +48,14 @@ public class Score : MonoBehaviour
         {
             textManager.OnRollComplete += CheckDiceRoll;
         }
+
+        // 버튼의 비활성화 상태 색상 설정
+        foreach (var button in LockButton)
+        {
+            ColorBlock colors = button.colors;
+            colors.disabledColor = Color.white; // 또는 원하는 색상
+            button.colors = colors;
+        }
     }
 
     // 주사위 굴림 체크 (3회 이상이면 리셋)
@@ -56,16 +63,13 @@ public class Score : MonoBehaviour
     {
         totalRollCount++;
 
-        if (totalRollCount >= 3)
-        {
-            ResetAllDice();
-        }
+        if (totalRollCount >= 3) ResetAllDice();
     }
 
     // 잠금 상태 토글
     private void ToggleLock(int index)
     {
-        if (index >= 0 && index < isLocked.Length)
+        if (index >= 0 && index < isLocked.Length && DiceScore[index].activeSelf && !dice[index].isRolling)
         {
             isLocked[index] = !isLocked[index];
             Image buttonImage = LockButton[index].GetComponent<Image>();
@@ -116,8 +120,26 @@ public class Score : MonoBehaviour
     // 주사위 값과 조건 업데이트
     private void Update()
     {
+        // 기본적으로 비활성화 상태로 가정
+        isDiceRolling = true;
+
+        // 모든 DiceScore가 활성화되었는지 체크
+        bool allDiceScoreActive = true;
+        for (int i = 0; i < DiceScore.Length; i++)
+        {
+            if (!DiceScore[i].activeSelf && !isLocked[i])
+            {
+                allDiceScoreActive = false;
+                break;
+            }
+        }
+
+        // 모든 DiceScore가 활성화되었다면 isDiceRolling을 false로 설정
+        if (allDiceScoreActive) isDiceRolling = false;
+
         for (int i = 0; i < dice.Length; i++)
         {
+            LockButton[i].interactable = DiceScore[i].activeSelf && !isDiceRolling;
 
             if (isLocked[i])
             {
@@ -125,15 +147,12 @@ public class Score : MonoBehaviour
                 continue;
             }
 
-            // 주사위가 굴러가는 중이면 비활성화하고 회전값 초기화
             if (dice[i].isRolling)
             {
-                isDiceRolling = true;
                 DiceScore[i].SetActive(false);
                 DiceScore[i].transform.rotation = Quaternion.Euler(0, 0, 0);
                 continue;
             }
-
             int currentFaceNum = dice[i].diceFaceNum;
 
             // 주사위 숫자에 따라 회전값 설정 및 활성화
@@ -145,7 +164,7 @@ public class Score : MonoBehaviour
                 case 4:
                 case 5:
                 case 6:
-                    newDiceScore[i] = currentFaceNum;
+                    if (newDiceScore[i] != currentFaceNum) newDiceScore[i] = currentFaceNum;
                     DiceScore[i].transform.rotation = GetRotationForNumber(currentFaceNum);
                     break;
                 default:
@@ -154,10 +173,7 @@ public class Score : MonoBehaviour
             }
 
             // 조건 체크
-            if (pedigreeManager != null)
-            {
-                pedigreeManager.CheckCondition();
-            }
+            if (pedigreeManager != null) pedigreeManager.CheckCondition();
         }
 
     }
@@ -165,10 +181,7 @@ public class Score : MonoBehaviour
     // 이벤트 구독 해제
     private void OnDestroy()
     {
-        if (textManager != null)
-        {
-            textManager.OnRollComplete -= CheckDiceRoll;
-        }
+        if (textManager != null) textManager.OnRollComplete -= CheckDiceRoll;
     }
     private Quaternion GetRotationForNumber(int number)
     {
@@ -196,10 +209,7 @@ public class Score : MonoBehaviour
     }
     public bool GetLockState(int index)
     {
-        if (index >= 0 && index < isLocked.Length)
-        {
-            return isLocked[index];
-        }
+        if (index >= 0 && index < isLocked.Length) return isLocked[index];
         return false;
     }
 }
