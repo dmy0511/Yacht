@@ -1198,8 +1198,10 @@ MonoBehaviour:
   cloverText: {fileID: 1460420152}
   rollText: {fileID: 0}
   rollButton: {fileID: 0}
+  scoreManager: {fileID: 0}
   bestText: {fileID: 0}
   currentText: {fileID: 0}
+  Roll: []
   upgradeManager: {fileID: 0}
   gameOverBestText: {fileID: 0}
   gameOverCurrentText: {fileID: 0}
@@ -5673,19 +5675,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 926840412}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1810993107}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: DecreaseProbability
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &926840412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8744,19 +8734,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1420514459}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1810993107}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: IncreaseProbability
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1420514459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12264,130 +12242,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1810993106
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1810993108}
-  - component: {fileID: 1810993107}
-  m_Layer: 0
-  m_Name: UpgradeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1810993107
+--- !u!114 &1810993107 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+  m_PrefabInstance: {fileID: 232307532896546182}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810993106}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0d9a1dc3b1acd54b90e04a8fca7c962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinMiningLevelText: {fileID: 147608952}
-  cloverMiningLevelText: {fileID: 98552726}
-  diamondMiningLevelText: {fileID: 430814538}
-  rollCountDefenseLevelText: {fileID: 1103033294}
-  showDicePointText: {fileID: 252651956}
-  coinMiningButton: {fileID: 1252791478}
-  cloverMiningButton: {fileID: 860037811}
-  diamondMiningButton: {fileID: 2047278751}
-  rollCountDefenseButton: {fileID: 810184601}
-  showDiceButton: {fileID: 1704264223}
-  showDiceNormalSprite: {fileID: 895162050, guid: debad446a2cce174f884d2372c620223, type: 3}
-  showDiceActivatedSprite: {fileID: 1508912849, guid: 18ec839aff90c7d4983c6dd9be3ee2d9, type: 3}
-  cashData: {fileID: 1710709509}
-  probabilityRows:
-  - slots:
-    - {fileID: 1462925233}
-    - {fileID: 1460924906}
-    - {fileID: 696736066}
-    - {fileID: 1287634128}
-    - {fileID: 1749884292}
-    - {fileID: 1603547087}
-    rowText: {fileID: 989449414}
-    plusButton: {fileID: 1420514458}
-    minusButton: {fileID: 2116972428}
-    activeSlots: 0
-  - slots:
-    - {fileID: 993533071}
-    - {fileID: 548802899}
-    - {fileID: 1923357175}
-    - {fileID: 1656724079}
-    - {fileID: 645381190}
-    - {fileID: 1500608054}
-    rowText: {fileID: 1870003856}
-    plusButton: {fileID: 2129513693}
-    minusButton: {fileID: 926840411}
-    activeSlots: 0
-  - slots:
-    - {fileID: 301583922}
-    - {fileID: 1353301958}
-    - {fileID: 1934495744}
-    - {fileID: 1250118434}
-    - {fileID: 1753559691}
-    - {fileID: 1382950234}
-    rowText: {fileID: 1347350192}
-    plusButton: {fileID: 759338694}
-    minusButton: {fileID: 510105707}
-    activeSlots: 0
-  - slots:
-    - {fileID: 523499574}
-    - {fileID: 1247778676}
-    - {fileID: 1313645050}
-    - {fileID: 1123230507}
-    - {fileID: 1783103430}
-    - {fileID: 34656495}
-    rowText: {fileID: 1890420608}
-    plusButton: {fileID: 2029947320}
-    minusButton: {fileID: 284630394}
-    activeSlots: 0
-  - slots:
-    - {fileID: 1165979185}
-    - {fileID: 360946595}
-    - {fileID: 1683464092}
-    - {fileID: 93013484}
-    - {fileID: 1815581561}
-    - {fileID: 449670424}
-    rowText: {fileID: 1568993814}
-    plusButton: {fileID: 1660966824}
-    minusButton: {fileID: 1726084751}
-    activeSlots: 0
-  - slots:
-    - {fileID: 534624582}
-    - {fileID: 635695733}
-    - {fileID: 1552665461}
-    - {fileID: 298623917}
-    - {fileID: 1767533508}
-    - {fileID: 478983090}
-    rowText: {fileID: 1252418142}
-    plusButton: {fileID: 1045325955}
-    minusButton: {fileID: 1945203707}
-    activeSlots: 0
---- !u!4 &1810993108
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810993106}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1815581561
 GameObject:
   m_ObjectHideFlags: 0
@@ -14501,19 +14366,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2116972429}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1810993107}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: DecreaseProbability
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2116972429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14633,19 +14486,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2129513694}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1810993107}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: IncreaseProbability
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2129513694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14759,6 +14600,323 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136518073}
   m_CullTransparentMesh: 1
+--- !u!1001 &232307532896546182
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: cashData
+      value: 
+      objectReference: {fileID: 1710709509}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: showDiceButton
+      value: 
+      objectReference: {fileID: 1704264223}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: coinMiningButton
+      value: 
+      objectReference: {fileID: 1252791478}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: showDicePointText
+      value: 
+      objectReference: {fileID: 252651956}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: cloverMiningButton
+      value: 
+      objectReference: {fileID: 860037811}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: coinMiningLevelText
+      value: 
+      objectReference: {fileID: 147608952}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: diamondMiningButton
+      value: 
+      objectReference: {fileID: 2047278751}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: cloverMiningLevelText
+      value: 
+      objectReference: {fileID: 98552726}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: diamondMiningLevelText
+      value: 
+      objectReference: {fileID: 430814538}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: rollCountDefenseButton
+      value: 
+      objectReference: {fileID: 810184601}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: rollCountDefenseLevelText
+      value: 
+      objectReference: {fileID: 1103033294}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].rowText
+      value: 
+      objectReference: {fileID: 989449414}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].rowText
+      value: 
+      objectReference: {fileID: 1870003856}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].rowText
+      value: 
+      objectReference: {fileID: 1347350192}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].rowText
+      value: 
+      objectReference: {fileID: 1890420608}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].rowText
+      value: 
+      objectReference: {fileID: 1568993814}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].rowText
+      value: 
+      objectReference: {fileID: 1252418142}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].plusButton
+      value: 
+      objectReference: {fileID: 1420514458}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].plusButton
+      value: 
+      objectReference: {fileID: 2129513693}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].plusButton
+      value: 
+      objectReference: {fileID: 759338694}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].plusButton
+      value: 
+      objectReference: {fileID: 2029947320}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].plusButton
+      value: 
+      objectReference: {fileID: 1660966824}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].plusButton
+      value: 
+      objectReference: {fileID: 1045325955}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].minusButton
+      value: 
+      objectReference: {fileID: 2116972428}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].minusButton
+      value: 
+      objectReference: {fileID: 926840411}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].minusButton
+      value: 
+      objectReference: {fileID: 510105707}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].minusButton
+      value: 
+      objectReference: {fileID: 284630394}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].minusButton
+      value: 
+      objectReference: {fileID: 1726084751}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].minusButton
+      value: 
+      objectReference: {fileID: 1945203707}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].slots.Array.data[0]
+      value: 
+      objectReference: {fileID: 1462925233}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].slots.Array.data[1]
+      value: 
+      objectReference: {fileID: 1460924906}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].slots.Array.data[2]
+      value: 
+      objectReference: {fileID: 696736066}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].slots.Array.data[3]
+      value: 
+      objectReference: {fileID: 1287634128}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].slots.Array.data[4]
+      value: 
+      objectReference: {fileID: 1749884292}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[0].slots.Array.data[5]
+      value: 
+      objectReference: {fileID: 1603547087}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].slots.Array.data[0]
+      value: 
+      objectReference: {fileID: 993533071}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].slots.Array.data[1]
+      value: 
+      objectReference: {fileID: 548802899}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].slots.Array.data[2]
+      value: 
+      objectReference: {fileID: 1923357175}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].slots.Array.data[3]
+      value: 
+      objectReference: {fileID: 1656724079}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].slots.Array.data[4]
+      value: 
+      objectReference: {fileID: 645381190}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[1].slots.Array.data[5]
+      value: 
+      objectReference: {fileID: 1500608054}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].slots.Array.data[0]
+      value: 
+      objectReference: {fileID: 301583922}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].slots.Array.data[1]
+      value: 
+      objectReference: {fileID: 1353301958}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].slots.Array.data[2]
+      value: 
+      objectReference: {fileID: 1934495744}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].slots.Array.data[3]
+      value: 
+      objectReference: {fileID: 1250118434}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].slots.Array.data[4]
+      value: 
+      objectReference: {fileID: 1753559691}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[2].slots.Array.data[5]
+      value: 
+      objectReference: {fileID: 1382950234}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].slots.Array.data[0]
+      value: 
+      objectReference: {fileID: 523499574}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].slots.Array.data[1]
+      value: 
+      objectReference: {fileID: 1247778676}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].slots.Array.data[2]
+      value: 
+      objectReference: {fileID: 1313645050}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].slots.Array.data[3]
+      value: 
+      objectReference: {fileID: 1123230507}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].slots.Array.data[4]
+      value: 
+      objectReference: {fileID: 1783103430}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[3].slots.Array.data[5]
+      value: 
+      objectReference: {fileID: 34656495}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].slots.Array.data[0]
+      value: 
+      objectReference: {fileID: 1165979185}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].slots.Array.data[1]
+      value: 
+      objectReference: {fileID: 360946595}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].slots.Array.data[2]
+      value: 
+      objectReference: {fileID: 1683464092}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].slots.Array.data[3]
+      value: 
+      objectReference: {fileID: 93013484}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].slots.Array.data[4]
+      value: 
+      objectReference: {fileID: 1815581561}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[4].slots.Array.data[5]
+      value: 
+      objectReference: {fileID: 449670424}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].slots.Array.data[0]
+      value: 
+      objectReference: {fileID: 534624582}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].slots.Array.data[1]
+      value: 
+      objectReference: {fileID: 635695733}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].slots.Array.data[2]
+      value: 
+      objectReference: {fileID: 1552665461}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].slots.Array.data[3]
+      value: 
+      objectReference: {fileID: 298623917}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].slots.Array.data[4]
+      value: 
+      objectReference: {fileID: 1767533508}
+    - target: {fileID: 1378585170730938224, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: probabilityRows.Array.data[5].slots.Array.data[5]
+      value: 
+      objectReference: {fileID: 478983090}
+    - target: {fileID: 1879471066162932655, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_Name
+      value: UpgradeManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6460151215593396706, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60c4930df6396324182ef35d92fa5434, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -14769,4 +14927,4 @@ SceneRoots:
   - {fileID: 1893213929}
   - {fileID: 145695380}
   - {fileID: 1710709510}
-  - {fileID: 1810993108}
+  - {fileID: 232307532896546182}

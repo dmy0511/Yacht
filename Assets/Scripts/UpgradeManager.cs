@@ -8,6 +8,7 @@ using UnityEngine.UI;
 // 게임의 각종 업그레이드와 주사위 확률을 관리하는 클래스
 public class UpgradeManager : MonoBehaviour
 {
+    public static UpgradeManager Instance { get; private set; }
     // UI 레벨 텍스트
     [Header("Level Texts")]
     [SerializeField] private TextMeshProUGUI coinMiningLevelText;      // 코인 채굴 레벨
@@ -42,7 +43,7 @@ public class UpgradeManager : MonoBehaviour
         public Button minusButton;
         public int activeSlots;
     }
-
+    
     [Header("Dice Probability UI")]
     [SerializeField] private ProbabilityRow[] probabilityRows = new ProbabilityRow[6];
 
@@ -72,6 +73,19 @@ public class UpgradeManager : MonoBehaviour
 
     private int currentShowDicePoint;
 
+    /*private void Awake()
+    {
+        // 싱글톤 패턴 구현
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }*/
     // 초기화
     private void Start()
     {

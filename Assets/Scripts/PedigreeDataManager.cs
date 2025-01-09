@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 // 족보 데이터를 관리하는 싱글톤 클래스
 public class PedigreeDataManager : MonoBehaviour
@@ -33,7 +34,22 @@ public class PedigreeDataManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // 씬 전환시에도 유지
+            DontDestroyOnLoad(gameObject);
+
+            // UpgradeManager가 없다면 생성
+            /*if (UpgradeManager.Instance == null)
+            {
+                // Resources 폴더에서 UpgradeManager 프리팹을 로드하고 인스턴스화
+                GameObject upgradeManagerPrefab = Resources.Load<GameObject>("Prefabs/UpgradeManager");
+                if (upgradeManagerPrefab != null)
+                {
+                    Instantiate(upgradeManagerPrefab);
+                }
+                else
+                {
+                    Debug.LogError("UpgradeManager 프리팹을 찾을 수 없습니다. Resources/Prefabs 폴더에 있는지 확인해주세요.");
+                }
+            }*/
         }
         else
         {

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 // 족보 시스템 전반을 관리하는 클래스
 public class PedigreeManager : MonoBehaviour
 {
+    public static PedigreeDataManager Instance { get; private set; }
     // UI 텍스트 요소들
     [SerializeField] private TextMeshProUGUI[] scoreTexts;      // 점수 텍스트들
     [SerializeField] private TextMeshProUGUI pedigreeText;      // 조건 표시 텍스트 1

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 // 게임의 텍스트 UI와 게임 진행 상태를 관리하는 클래스
 public class TextManager : MonoBehaviour
 {
+    public static TextManager Instance { get; private set; }
     // UI 요소들
     [SerializeField] private TextMeshProUGUI coinText;      // 코인
     [SerializeField] private TextMeshProUGUI diamondText;   // 다이아
@@ -53,6 +54,19 @@ public class TextManager : MonoBehaviour
     private DiceRoll[] diceRolls;                              // 모든 주사위
     private List<DiceRoll> rollingDice = new List<DiceRoll>(); // 굴리는 중인 주사위
 
+    /*private void Awake()
+    {
+        // 싱글톤 패턴 구현
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }*/
     // 초기화
     void Start()
     {
@@ -131,9 +145,9 @@ public class TextManager : MonoBehaviour
         rollCount = 100;
         bestScore = 0;
         currentScore = 0;
-        currentCoin = 0;
-        currentDiamond = 0;
-        currentClover = 0;
+        currentCoin = 10000;
+        currentDiamond = 10000;
+        currentClover = 10000;
 
         if (coinText != null) UpdateCoinText(0);
         if (cloverText != null) UpdateCloverText(0);
