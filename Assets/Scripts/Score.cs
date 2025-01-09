@@ -88,14 +88,13 @@ public class Score : MonoBehaviour
     {
         for (int i = 0; i < DiceScore.Length; i++)
         {
-            if (DiceScore[i] != null)
-            {
-                DiceScore[i].SetActive(false);
-            }
+            if (DiceScore[i] != null) DiceScore[i].SetActive(false);
         }
         for (int i = 0; i < isLocked.Length; i++)
         {
             isLocked[i] = false;
+            newDiceScore[i] = 0;
+
             if (LockButton[i] != null)
             {
                 Image buttonImage = LockButton[i].GetComponent<Image>();
@@ -109,10 +108,7 @@ public class Score : MonoBehaviour
         }
         foreach (var die in dice)
         {
-            if (die != null)
-            {
-                die.diceFaceNum = 0;
-            }
+            if (die != null)  die.diceFaceNum = 0;
         }
         totalRollCount = 0;
     }
