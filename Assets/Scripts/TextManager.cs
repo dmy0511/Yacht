@@ -54,6 +54,8 @@ public class TextManager : MonoBehaviour
     private DiceRoll[] diceRolls;                              // 모든 주사위
     private List<DiceRoll> rollingDice = new List<DiceRoll>(); // 굴리는 중인 주사위
 
+    private bool[] diceLockStates = new bool[5]; // 주사위 잠금 상태를 저장하는 배열
+
     /*private void Awake()
     {
         // 싱글톤 패턴 구현
@@ -73,6 +75,17 @@ public class TextManager : MonoBehaviour
         if (scoreManager == null)
         {
             scoreManager = FindObjectOfType<Score>();
+        }
+
+        for (int i = 0; i < diceLockStates.Length; i++)
+        {
+            diceLockStates[i] = false;
+        }
+
+        // Score 컴포넌트에서 잠금 상태 변경 이벤트 구독
+        if (scoreManager != null)
+        {
+            scoreManager.OnLockStateChanged += UpdateDiceLockState;
         }
 
         for (int i = 0; i < Roll.Length; i++) Roll[i].SetActive(false);
@@ -287,6 +300,29 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    // 잠금 상태가 변경될 때 호출되는 메서드
+    private void UpdateDiceLockState(int diceIndex, bool isLocked)
+    {
+        diceLockStates[diceIndex] = isLocked;
+        UpdateRollButtonState();
+    }
+
+    // 실행 버튼 상태 업데이트
+    private void UpdateRollButtonState()
+    {
+        int lockedCount = 0;
+        for (int i = 0; i < diceLockStates.Length; i++)
+        {
+            if (diceLockStates[i])
+            {
+                lockedCount++;
+            }
+        }
+
+        // 모든 주사위가 잠겼을 때는 버튼 비활성화, 아니면 활성화
+        rollButton.interactable = (lockedCount < 5) && (rollCount > 0);
+    }
+
     private void OnDestroy()
     {
         if (diceRolls != null)
@@ -299,6 +335,10 @@ public class TextManager : MonoBehaviour
                     dice.OnRollEnd -= OnAnyDiceRollEnd;
                 }
             }
+        }
+        if (scoreManager != null)
+        {
+            scoreManager.OnLockStateChanged -= UpdateDiceLockState;
         }
     }
 

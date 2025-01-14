@@ -8,6 +8,8 @@ using UnityEngine.UI;
 // 주사위 값과 잠금 상태를 관리하는 클래스
 public class Score : MonoBehaviour
 {
+    public event System.Action<int, bool> OnLockStateChanged;
+
     // UI 요소들
     [SerializeField] private DiceRoll[] dice;                   // 주사위 배열
     [SerializeField] public GameObject[] DiceScore;              // 점수 다이스
@@ -80,6 +82,7 @@ public class Score : MonoBehaviour
                 Vector2 targetSize = isLocked[index] ? lockedSize : unlockedSize;
                 rectTransform.sizeDelta = targetSize;
             }
+            OnLockStateChanged?.Invoke(index, isLocked[index]);
         }
     }
 
@@ -92,6 +95,7 @@ public class Score : MonoBehaviour
         }
         for (int i = 0; i < isLocked.Length; i++)
         {
+            bool wasLocked = isLocked[i];
             isLocked[i] = false;
             newDiceScore[i] = 0;
 
@@ -104,6 +108,11 @@ public class Score : MonoBehaviour
                     buttonImage.sprite = unlockedSprite;
                     rectTransform.sizeDelta = unlockedSize;
                 }
+            }
+            // 잠금 상태가 변경되었을 때만 이벤트 발생
+            if (wasLocked)
+            {
+                OnLockStateChanged?.Invoke(i, false);
             }
         }
         foreach (var die in dice)
