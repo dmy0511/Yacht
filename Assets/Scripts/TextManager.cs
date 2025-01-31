@@ -24,13 +24,13 @@ public class TextManager : MonoBehaviour
     private PedigreeManager pedigreeManager;
 
     // 게임 상태 변수들
-    private int rollCount = 100;        // 남은 주사위 굴리기 횟수
-    private int diceRollAttempts = 0;   // 현재 시도 횟수
-    private int currentCoin;            // 현재 코인
-    private int currentDiamond;         // 현재 다이아몬드
-    private int currentClover;          // 현재 클로버
+    public int rollCount = 100;         // 남은 주사위 굴리기 횟수
+    public int currentCoin;             // 현재 코인
+    public int currentDiamond;          // 현재 다이아몬드
+    public int currentClover;           // 현재 클로버
     private int bestScore;              // 최고 점수
     private int currentScore;           // 현재 점수
+    private int diceRollAttempts = 0;   // 현재 시도 횟수
 
     // 재화 업데이트 이벤트
     public event System.Action<int> OnCoinUpdated;
@@ -56,20 +56,7 @@ public class TextManager : MonoBehaviour
 
     private bool[] diceLockStates = new bool[5]; // 주사위 잠금 상태를 저장하는 배열
 
-    /*private void Awake()
-    {
-        // 싱글톤 패턴 구현
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }*/
-    // 초기화
+
     void Start()
     {
         if (scoreManager == null)
@@ -171,6 +158,12 @@ public class TextManager : MonoBehaviour
         ResetGame();
 
         Debug.Log("PlayerPrefs가 초기화되었습니다!");
+
+        if (ChallengeManager._Instance != null)
+        {
+            ChallengeManager._Instance.ResetChallenges();
+        }
+
     }
 
     // 코인 업데이트
@@ -444,14 +437,20 @@ public class TextManager : MonoBehaviour
                 }
 
                 UpdateRollText();
+
+                // 주사위를 굴릴 때 도전과제 업데이트 추가
+                if (ChallengeManager._Instance != null)
+                    ChallengeManager._Instance.UpdateChallengeProgress("주사위 굴리기 10회 달성", 1);
+
+
                 OnRollComplete?.Invoke();
                 diceRollAttempts = 0;
-
                 StartCoroutine(CheckDiceStopCoroutine());
             }
 
             if (rollCount <= 0)
             {
+
                 rollText.text = "게임 오버";
                 UpdateBestScore();
                 currentScore = 0;
@@ -507,7 +506,7 @@ public class TextManager : MonoBehaviour
                 }
                 yield break;
             }
-            yield return new WaitForSeconds(3.3f);
+            yield return new WaitForSeconds(2.3f);
         }
     }
 
@@ -529,5 +528,13 @@ public class TextManager : MonoBehaviour
             gameOverPanel.SetActive(false);
             rollButton.interactable = true;
         }
+    }
+    public void SaveGameData()
+    {
+        PlayerPrefs.SetInt("CurrentCoin", currentCoin);
+        PlayerPrefs.SetInt("CurrentDiamond", currentDiamond);
+        PlayerPrefs.SetInt("CurrentClover", currentClover);
+        PlayerPrefs.SetInt("RollCount", rollCount);
+        PlayerPrefs.Save();
     }
 }

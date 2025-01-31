@@ -312,51 +312,67 @@ public class PedigreeManager : MonoBehaviour
             return false;
         }
 
+        bool conditionMet = false;
+
         switch (currentCondition)
         {
             case "더블":
-                return scoreCount.ContainsValue(2);
+                conditionMet = scoreCount.Values.Count(v => v == 2) == 1;
+                break;
 
             case "오버":
-                return uniqueScores.Count == diceRolls.Length;
+                conditionMet = uniqueScores.Count == diceRolls.Length;
+                break;
 
             case "트리플":
-                return scoreCount.ContainsValue(3);
+                conditionMet = scoreCount.ContainsValue(3);
+                break;
 
             case "쿼드라플":
-                return scoreCount.ContainsValue(4);
+                conditionMet = scoreCount.ContainsValue(4);
+                break;
 
             case "제곱":
-                int pairs = 0;
-                foreach (var count in scoreCount.Values)
-                {
-                    if (count == 2) pairs++;
-                }
-                return pairs == 2;
+                conditionMet = scoreCount.Values.Count(v => v == 2) == 2;
+                break;
 
             case "풀하우스":
-                return scoreCount.ContainsValue(2) && scoreCount.ContainsValue(3);
+                conditionMet = scoreCount.ContainsValue(2) && scoreCount.ContainsValue(3);
+                break;
 
             case "야추":
-                return scoreCount.ContainsValue(diceRolls.Length);
+                conditionMet = scoreCount.ContainsValue(diceRolls.Length);
+                break;
 
             case "이븐":
-                return uniqueScores.All(num => num % 2 == 0);
+                conditionMet = uniqueScores.All(num => num % 2 == 0);
+                break;
 
             case "오드":
-                return uniqueScores.All(num => num % 2 != 0);
+                conditionMet = uniqueScores.All(num => num % 2 != 0);
+                break;
 
             case "16":
-                return uniqueScores.All(num => num == 1 || num == 6);
+                conditionMet = uniqueScores.All(num => num == 1 || num == 6);
+                break;
 
             case "스몰":
-                return uniqueScores.SetEquals(new HashSet<int> { 1, 2, 3, 4, 5 });
+                conditionMet = uniqueScores.SetEquals(new HashSet<int> { 1, 2, 3, 4, 5 });
+                break;
 
             case "라지":
-                return uniqueScores.SetEquals(new HashSet<int> { 2, 3, 4, 5, 6 });
+                conditionMet = uniqueScores.SetEquals(new HashSet<int> { 2, 3, 4, 5, 6 });
+                break;
 
             default:
-                return false;
+                conditionMet = false;
+                break;
         }
+
+        if (conditionMet)
+        {
+            scoreManager.ResetRollCount();
+        }
+        return conditionMet;
     }
 }

@@ -35,21 +35,6 @@ public class PedigreeDataManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            // UpgradeManager가 없다면 생성
-            /*if (UpgradeManager.Instance == null)
-            {
-                // Resources 폴더에서 UpgradeManager 프리팹을 로드하고 인스턴스화
-                GameObject upgradeManagerPrefab = Resources.Load<GameObject>("Prefabs/UpgradeManager");
-                if (upgradeManagerPrefab != null)
-                {
-                    Instantiate(upgradeManagerPrefab);
-                }
-                else
-                {
-                    Debug.LogError("UpgradeManager 프리팹을 찾을 수 없습니다. Resources/Prefabs 폴더에 있는지 확인해주세요.");
-                }
-            }*/
         }
         else
         {

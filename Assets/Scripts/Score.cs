@@ -8,6 +8,7 @@ using UnityEngine.UI;
 // 주사위 값과 잠금 상태를 관리하는 클래스
 public class Score : MonoBehaviour
 {
+    public static Score Instance { get; private set; } // 싱글톤 인스턴스
     public event System.Action<int, bool> OnLockStateChanged;
 
     // UI 요소들
@@ -27,9 +28,22 @@ public class Score : MonoBehaviour
     private int totalRollCount = 0;                             // 총 굴린 횟수
     private int[] newDiceScore;
     private bool isDiceRolling = false;  // 주사위가 굴러가고 있는지 확인하는 플래그
+
+    public event Action<int> OnScoreUpdated;
+    private int currentScore;
+
     // 초기화
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         // 컴포넌트들 찾기
         dice = FindObjectsOfType<DiceRoll>();
         Array.Sort(dice, (a, b) => a.diceIndex.CompareTo(b.diceIndex));
@@ -254,4 +268,15 @@ public class Score : MonoBehaviour
 
         return lockedCount >= 5;
     }
+    public void ResetRollCount()
+    {
+        totalRollCount = 0;
+        Debug.Log("주사위 롤 횟수가 초기화되었습니다.");
+    }
+    public void UpdateScore(int amount)
+    {
+        currentScore += amount;
+        OnScoreUpdated?.Invoke(currentScore); // 이벤트 발생
+    }
+
 }

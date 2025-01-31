@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 // 주사위 굴리기를 담당하는 클래스
 public class DiceRoll : MonoBehaviour
@@ -23,6 +24,7 @@ public class DiceRoll : MonoBehaviour
     public event System.Action OnRollStart;
     public event System.Action OnRollEnd;
 
+    public event Action OnDiceRolled;
 
     void Start()
     {
@@ -75,9 +77,9 @@ public class DiceRoll : MonoBehaviour
     {
         if (upgradeManager == null)
         {
-            forceX = Random.Range(minRandomForceValue, maxRandomForceValue);
-            forceY = Random.Range(minRandomForceValue, maxRandomForceValue);
-            forceZ = Random.Range(minRandomForceValue, maxRandomForceValue);
+            forceX = UnityEngine.Random.Range(minRandomForceValue, maxRandomForceValue);
+            forceY = UnityEngine.Random.Range(minRandomForceValue, maxRandomForceValue);
+            forceZ = UnityEngine.Random.Range(minRandomForceValue, maxRandomForceValue);
             return;
         }
 
@@ -90,7 +92,7 @@ public class DiceRoll : MonoBehaviour
             totalProbability += probabilities[i - 1];
         }
 
-        float randomValue = Random.Range(0f, 1f);
+        float randomValue = UnityEngine.Random.Range(0f, 1f);
         float currentSum = 0f;
 
         for (int i = 0; i < 6; i++)
@@ -105,9 +107,9 @@ public class DiceRoll : MonoBehaviour
             }
         }
 
-        forceX = Random.Range(minRandomForceValue, maxRandomForceValue);
-        forceY = Random.Range(minRandomForceValue, maxRandomForceValue);
-        forceZ = Random.Range(minRandomForceValue, maxRandomForceValue);
+        forceX = UnityEngine.Random.Range(minRandomForceValue, maxRandomForceValue);
+        forceY = UnityEngine.Random.Range(minRandomForceValue, maxRandomForceValue);
+        forceZ = UnityEngine.Random.Range(minRandomForceValue, maxRandomForceValue);
     }
 
     // 목표 숫자에 따른 힘 조절
@@ -116,39 +118,39 @@ public class DiceRoll : MonoBehaviour
         switch (targetNumber)
         {
             case 1:
-                forceX = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
-                forceY = Random.Range(0, maxRandomForceValue * 0.3f);
-                forceZ = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceX = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceY = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
+                forceZ = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
                 break;
             case 2:
-                forceX = Random.Range(0, maxRandomForceValue * 0.3f);
-                forceY = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
-                forceZ = Random.Range(0, maxRandomForceValue * 0.3f);
+                forceX = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
+                forceY = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceZ = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
                 break;
             case 3:
-                forceX = Random.Range(0, maxRandomForceValue * 0.3f);
-                forceY = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
-                forceZ = Random.Range(0, maxRandomForceValue * 0.3f);
+                forceX = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
+                forceY = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceZ = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
                 break;
             case 4:
-                forceX = Random.Range(0, maxRandomForceValue * 0.3f);
-                forceY = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
-                forceZ = Random.Range(0, maxRandomForceValue * 0.3f);
+                forceX = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
+                forceY = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceZ = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
                 break;
             case 5:
-                forceX = Random.Range(0, maxRandomForceValue * 0.3f);
-                forceY = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
-                forceZ = Random.Range(0, maxRandomForceValue * 0.3f);
+                forceX = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
+                forceY = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceZ = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
                 break;
             case 6:
-                forceX = Random.Range(0, maxRandomForceValue * 0.3f);
-                forceY = Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
-                forceZ = Random.Range(0, maxRandomForceValue * 0.3f);
+                forceX = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
+                forceY = UnityEngine.Random.Range(maxRandomForceValue * 0.7f, maxRandomForceValue);
+                forceZ = UnityEngine.Random.Range(0, maxRandomForceValue * 0.3f);
                 break;
             default:
-                forceX = Random.Range(0, maxRandomForceValue);
-                forceY = Random.Range(0, maxRandomForceValue);
-                forceZ = Random.Range(0, maxRandomForceValue);
+                forceX = UnityEngine.Random.Range(0, maxRandomForceValue);
+                forceY = UnityEngine.Random.Range(0, maxRandomForceValue);
+                forceZ = UnityEngine.Random.Range(0, maxRandomForceValue);
                 break;
         }
     }
@@ -159,7 +161,7 @@ public class DiceRoll : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
         // 랜덤한 회전값으로 초기화
-        transform.rotation = new Quaternion(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360), 0);
+        transform.rotation = new Quaternion(UnityEngine.Random.Range(0, 360), UnityEngine.Random.Range(0, 360), UnityEngine.Random.Range(0, 360), 0);
         diceFaceNum = 0;
         isRolling = false;
     }
